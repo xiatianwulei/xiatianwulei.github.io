@@ -1,0 +1,386 @@
+---
+title: "Runtime 学习整理"
+date: 2019-12-12T17:49:34+08:00
+draft: false
+---
+
+# Runtime  学习整理
+### 一、 简介
+Runtime 是 Objective-C 区别于 C 语言这样的静态语言的一个非常重要的特性。对于 C 语言，函数的调用会在编译期就已经决定好，在编译完成后直接顺序执行。但是 OC 是一门动态语言，函数调用变成了消息发送，在编译期不能知道要调用哪个函数。所以 Runtime 无非就是去解决如何在运行时期找到调用方法这样的问题。
+
+### 二、 整体思路
+![](/media/15676467989322/15676729583432.jpg)
+
+> instance -> class -> method -> SEL -> IMP -> 实现函数  
+
+实例对象中存放 isa 指针以及实例变量，有 isa 指针可以找到实例对象所属的类对象 (类也是对象，面向对象中一切都是对象)，类中存放着实例方法列表，在这个方法列表中 SEL 作为 key，IMP 作为 value。 在编译时期，根据方法名字会生成一个唯一的 Int 标识，这个标识就是 SEL。IMP 其实就是函数指针 指向了最终的函数实现。整个 Runtime 的核心就是 objc_msgSend 函数，通过给类发送 SEL 以传递消息，找到匹配的 IMP 再获取最终的实现。如下的这张图描述了对象的内存布局。
+
+### 三、Runtime 的理论
+1. 简单概括Runtime的使用方式
+    * 利用关联对象（AssociatedObject）给分类添加属性
+    * 遍历类的所有成员变量（修改textfield的占位文字颜色、字典转模型、自动归档解档）
+    * 交换方法实现（交换系统的方法）
+    * 利用消息转发机制解决方法找不到的异常问题
+    * KVC 字典转模型
+2. Runtime消息机制
+    * OC中的方法调用其实都是转成了objc_msgSend函数的调用，给receiver（方法调用者）发送了一条消息（selector方法名）
+    * objc_msgSend底层有3大阶段，消息发送（当前类、父类中查找）、动态方
+    
+3. 实现步骤
+```
+    1. OC中在对象上调用方法其实就是给该对象发送一个消息
+      id returnValue = [someObject messageName:parameter];
+    2. 编译器编译的时候会把例子中的代码转换成标准的C语言函数调用，即objc_msgSend,如下：
+    id returnValue = objc_msgSend(someObject,
+                              @selector(messageName:),
+                              parameter);
+解释：
+    * 用消息传递的话来解释就是：向 someObject 对象发送了一个名叫 messageName 的消息，这个消息携带了一个叫 parameter 的参数。这里用到了一个 objc_msgSend 函数，其函数原型如下
+    void objc_msgSend(id self, SEL cmd, ...);
+
+    * 这是一个可变参数的函数，第一个参数代表消息接收者，第二个代表 SEL 类型，后面的参数就是消息传递中使用的参数。
+
+    * 那么什么是 SEL 呢？SEL 就是代码在编译时，编译器根据方法签名来生成的一个唯一 ID。此 ID 可以用以区分不同的方法，只要 ID 一致，即看成同一个方法，ID 不同，即为不同的方法。
+
+    * 当进行消息传递，对象在响应消息时，是通过 SEL 在 methodlist 中查找函数指针 IMP，找到后直接通过指针调用函数，这其实就是前文介绍的 动态绑定。若是找到对应函数就跳转到实现代码，若找不到，就沿着继承链往上查找，直到找到相应的实现代码为止。若最终还是没找到实现代码，说明当前对象无法响应此消息，_接下来就会执行 消息转发 操作_，以试图找到一个能响应此消息的对象。
+   原型：
+    // 获取 SEL 
+    SEL sel = @selector(methodName);
+    // 获取 IMP
+    IMP imp = methodForSelector(sel);
+    下部到消息转发机制
+```
+4.消息转发
+    *消息转发的三大阶段*
+    1. 第一阶段先征询消息接收者所属的类，看其是否能动态添加方法，以处理当前这个无法响应的 selector，这叫做 动态方法解析（dynamic method resolution）。如果运行期系统（runtime system） 第一阶段执行结束，接收者就无法再以动态新增方法的手段来响应消息，进入第二阶段。
+    2. 第二阶段看看有没有其他对象（备援接收者，replacement receiver）能处理此消息。如果有，运行期系统会把消息转发给那个对象，转发过程结束；如果没有，则启动完整的消息转发机制。
+    3. 第三阶段 完整的消息转发机制。运行期系统会把与消息有关的全部细节都封装到 NSInvocation 对象中，再给接收者最后一次机会，令其设法解决当前还未处理的消息。
+   
+        
+动态解析流程图：
+    ![](/media/15676467989322/15677634621775.jpg)
+如下用于描述动态消息解析的流程:
+    1. 通过 resolveInstanceMethod 得知方法是否为动态添加，YES则通过 class_addMethod 动态添加方法，处理消息，否则进入下一步。dynamic 属性就与这个过程有关，当一个属性声明为 dynamic 时 就是告诉编译器：开发者一定会添加 setter/getter 的实现，而编译时不用自动生成。
+    2. 这步会进入 forwardingTargetForSelector 用于指定哪个对象来响应消息。如果返回nil 则进入第三步。这种方式把消息原封不动地转发给目标对象，有着比较高的效率。如果不能自己的类里面找到替代方法，可以重载这个方法，然后把消息转给其他的对象。
+    3. 这步调用 methodSignatureForSelector 进行方法签名，这可以将函数的参数类型和返回值封装。如果返回 nil 说明消息无法处理并报错 unrecognized selector sent to instance，如果返回 methodSignature，则进入 forwardInvocation ，在这里可以修改实现方法，修改响应对象等，如果方法调用成功，则结束。如果依然不能正确响应消息，则报错 unrecognized selector sent to instance.
+    
+ **可以利用 2、3 中的步骤实现对接受消息对象的转移，可以实现“多重继承”的效果。**
+ 
+代码体现：
+*动态方法解析*
+ 对象在收到无法响应的消息后，会调用其所属类的下列方法
+```
+/**
+ *  如果尚未实现的方法是实例方法，则调用此函数
+ *
+ *  @param selector 未处理的方法
+ *
+ *  @return 返回布尔值，表示是否能新增实例方法用以处理selector
+ */
++ (BOOL)resolveInstanceMethod:(SEL)selector;
+/**
+ *  如果尚未实现的方法是类方法，则调用此函数
+ *
+ *  @param selector 未处理的方法
+ *
+ *  @return 返回布尔值，表示是否能新增类方法用以处理selector
+ */
++ (BOOL)resolveClassMethod:(SEL)selector;
+```
+方法返回布尔类型，表示是否能新增一个方法来处理 selector，此方案通常用来实现 @dynamic 属性。
+```
+// 动态方法解析，先进行这一步
++ (BOOL)resolveInstanceMethod:(SEL)name
+// 实例方法
+{
+    
+    NSLog(@" >> Instance resolving %@", NSStringFromSelector(name));
+    // MissMethod为调用的方法名
+    if (name == @selector(dynamicParserMethod)) {
+        
+        class_addMethod([self class], name, (IMP)dynamicMethodIMP, "v@:");
+        
+        return YES;
+        
+    }
+    
+    return [super resolveInstanceMethod:name];
+    
+}
+// 处理该类无法处理消息的方法
+void dynamicMethodIMP(id self, SEL _cmd) {
+    
+    NSLog(@" >> dynamicMethodIMP");
+    
+}
+```
+*备援接收者*
+如果无法 动态解析方法，运行期系统就会询问是否能将消息转给其他接收者来处理，对应的方法为
+```
+// 备援接收者的处理
+- (id)forwardingTargetForSelector:(SEL)aSelector {
+    
+    NSLog(@" >> forwardingTargetForSelector %@", NSStringFromSelector(aSelector));
+    
+    if (aSelector == @selector(testReceiveObject)) {
+        // 返回接受该方法的处理类
+        ReceiveObject *receiveObject = [[ReceiveObject alloc] init];
+        return receiveObject;
+        
+    }
+    
+    return [super forwardingTargetForSelector:aSelector];
+}
+```
+在对象内部，可能还有其他对象，该对象可通过此方法将能够处理 selector 的相关内部对象返回，在外界看来，就好像是该对象自己处理的似得。
+*完整的消息转发机制*
+如果前面两步都无法处理消息，就会启动完整的消息转发机制。首先创建 NSInvocation 对象，把尚未处理的那条消息有关的全部细节装在里面，在触发 NSInvocation 对象时，消息派发系统（message-dispatch system）将会把消息指派给目标对象。对应的方法为
+```
+/**
+ *  消息派发系统通过此方法，将消息派发给目标对象,实现消息转发
+ *
+ *  @param anInvocation 之前创建的NSInvocation实例对象，用于装载有关消息的所有内容
+ */
+- (void)forwardInvocation:(NSInvocation *)anInvocation {
+    
+    NSLog(@"forwardInvocation = %@", NSStringFromSelector(anInvocation.selector));
+    
+    if (anInvocation.selector == @selector(forwardInvocationMsg)) {
+        
+        ReceiveObject *receiveObject = [[ReceiveObject alloc] init];
+        if ([receiveObject respondsToSelector:[anInvocation selector]]) {
+            [anInvocation invokeWithTarget:receiveObject];
+        }else {
+            [super forwardInvocation:anInvocation];
+        }
+    }
+    
+}
+
+// 调用forwardInvocation之前要先进行对方法进行注册
+
+- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector
+{
+    NSMethodSignature* signature = [super methodSignatureForSelector:selector];
+    if (!signature) {
+        // 注册
+         ReceiveObject *receiveObject = [[ReceiveObject alloc] init];
+        signature = [receiveObject methodSignatureForSelector:selector];
+    }
+    return signature;
+}
+```
+这个方法可以实现的很简单，通过改变调用的目标对象，使得消息在新目标对象上得以调用即可。然而这样实现的效果与 备援接收者 差不多，所以很少人会这么做。更加有用的实现方式为：在触发消息前，先以某种方式改变消息内容，比如追加另一个参数、修改 selector 等等
+
+
+1. 理解Objective-C是动态运行时语言。
+    1. 主要是将数据类型的确定由编译时,推迟到了运行时。这个问题其实浅涉及到两个概念,运行时和多态。
+    2. 简单来说, 运行时机制使我们直到运行时才去决定一个对象的类别,以及调用该类别对象指定方法。
+    3. 多态:不同对象以自己的方式响应相同的消息的能力叫做多态。
+    4. 意思就是假设生物类(life)都拥有一个相同的方法-eat;那人类属于生物,猪也属于生物,都继承了life后,实现各自的eat,但是调用是我们只需调用各自的eat方法。也就是不同的对象以自己的方式响应了相同的消 息(响应了eat这个选择器)。因此也可以说,运行时机制是多态的基础.
+
+
+### 四、Runtime 的实践
+#### 1. Method Swizzling
+ Method Swizzling是改变一个已存在的selector的实现的技术。可以使用它来  在Runtime通过修改类的分发表中selector对应的函数，来修改selector的实现。
+
+因为Method Swizzling的实现模式比较固定，所以将其抽象为一个分类，可以直接方便调用.
+```
+#import <Foundation/Foundation.h>
+
+@interface NSObject (Swizzling)
+
++(void)methodSwizzlingWithOriginalSelector:(SEL)originalSelector bySwizzledSelector:(SEL)swizzledSelector;
+@end
+
+#import "NSObject+Swizzling.h"
+#import <objc/runtime.h>
+@implementation NSObject (Swizzling)
+
++(void)methodSwizzlingWithOriginalSelector:(SEL)originalSelector
+                        bySwizzledSelector:(SEL)swizzledSelector{
+    
+    Class class = [self class];
+    Method originalMethod = class_getInstanceMethod(class, originalSelector);
+    Method swizzleMethod = class_getInstanceMethod(class, swizzledSelector);
+ 
+    BOOL didAddMethod = class_addMethod(class, originalSelector, method_getImplementation(swizzleMethod), method_getTypeEncoding(swizzleMethod));
+    if (didAddMethod) {
+        class_replaceMethod(class, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
+    }else{
+        method_exchangeImplementations(originalMethod, swizzleMethod);
+    }
+}
+@end
+```
+* class_addMethod:实现会覆盖父类的方法实现。但不会取代本类中已存在的实现，如果本类中包含一个同名的实现，则函数返回NO。这里为源SEL添加IMP是为了避免源SEL没有实现IMP的情况。若添加成功则说明源SEL没有实现IMP，将源SEL的IMP替换到交换SEL的IMP；若添加失败则说明源SEL已经有IMP了，直接将两个SEL的IMP交换就可以了。
+* class_replaceMethod：该函数的行为可以分为两种：如果类中不存在name指定的方法，则类似于clss_addMethod函数一样会添加方法；如果类中已存在name指定的方法，则类似于method_setImplementation一样代替原方法的实现。
+
+*实践:*
+程序每个ViewController展示给用户的次数，可以通过Method Swizzling替换ViewDidAppear初始方法。
+```
+创建一个UIViewController的分类，重写自定义的ViewDidAppear方法，并在其+load方法中实现ViewDidAppear方法的交换。
+#import <UIKit/UIKit.h>
+@interface UIViewController (Swizzling)
+@end
+
+#import "UIViewController+Swizzling.h"
+#import "NSObject+Swizzling.h"
+
+@implementation UIViewController (Swizzling)
++(void)load{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [UIViewController methodSwizzlingWithOriginalSelector:@selector(viewDidAppear:)
+                                           bySwizzledSelector:@selector(my_ViewDidAppear:)];
+
+    });
+    }
+-(void) my_ViewDidAppear:(BOOL)animated{
+    [self my_ViewDidAppear:animated];
+    NSLog(@"===== %@ viewDidAppear=====",[self class]);
+}
+@end
+
+```
+这里有几个注意点：
+Swizzling应该总在+load中执行
+在OC中，Runtime会在类初始加载时调用+load方法，在类第一次被调用时实现+initialize方法。由于Method Swizzling会影响到类的全局状态，所以要尽量避免在并发处理中出现竞争情况。+load方法能保证在类的初始化过程中被加载，并保证这种改变应用级别的行为的一致性。
+要使用dispatch_once执行方法交换
+方法交换要求线程安全，而且保证在任何情况下只能交换一次。
+
+#### 2. 实现给分类增加属性
+开发中常需要在不改变某个类的前提下为其添加一个新的属性，尤其是为系统的类添加新的属性，这个时候就可以利用Runtime的关联对象（Associated Objects）来为分类添加新的属性了。
+关联对象是Runtime的一个特性，Runtime中定义了三个允许你讲将任何键值在Runtime关联到对象上的函数：
+* objc_setAssociatedObject 设置并联对象
+
+```
+ /// object：需要设置关联对象的对象
+ /// key:关联对象的key，推荐使用selector
+ /// value：关联对象的值，id类型
+ /// policy：关联对象的策略，属性可以根据定义在枚举类型           objc_AssociationPolicy上的行为被关联在对象上。类似于@property创建时设置的关键字。
+void objc_setAssociatedObject(id object, const void *key, id value, objc_AssociationPolicy policy) 
+```
+
+* objc_getAssociatedObject 获取关联对象
+
+```
+id objc_getAssociatedObject(id object, const void *key)
+```
+_通过提供的方法我们就可以对存在的类在拓展中添加自定义的属性了。_
+
+实例：为UIImage类添加一个downLoadURL的属性。
+```
+#import <UIKit/UIKit.h>
+
+@interface UIImage (downLoadURL)
+@property (nonatomic, strong) NSString *downLoadURL;
+@end
+
+#import "UIImage+downLoadURL.h"
+#import <objc/runtime.h>
+@implementation UIImage (downLoadURL)
+
+-(void)setDownLoadURL:(NSString *)downLoadURL{
+    objc_setAssociatedObject(self, @selector(downLoadURL), downLoadURL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+-(NSString *)downLoadURL{
+    return objc_getAssociatedObject(self, @selector(downLoadURL));
+}
+@end
+```
+#### 3. 实现字典的模型和自动转换
+优秀的JSON转模型第三方库JSONModel、YYModel等都利用runtime对属性进行获取，赋值等操作，要比KVC进行模型转换更加强大，更有效率。
+阅读YYModel的源码可以看出，YY大神对NSObject的内容进行了又一次封装，添加了许多描述内容。其中YYClassInfo是对Class进行了再次封装，而YYClassIvarInfo、YYClassMethodInfo、YYClPropertyInfo分别是对Class的Ivar、Method和property进行了封装和描述。在提取Class的相关信息时都运用了Runtime。
+
+为了方便大家更好的理解字典转模型，我粗略的写了一个极简陋版的转模型方案供大家理解其思路，更优秀完美的思路建议大家阅读优秀第三方框架的源码。
+```
+@interface NSObject (ZCModel)
++(instancetype) setModelWithDict:(NSDictionary*)dict;
+@end
+
+@implementation NSObject (ZCModel)
++(instancetype) setModelWithDict:(NSDictionary*)dict{
+    
+    Class cls = [self class];
+    id Model = [[self alloc]init];
+    unsigned int count;
+    //提取Class的property列表
+    objc_property_t *property_t = class_copyPropertyList(cls, &count);
+    //遍历列表，对每个property分别处理
+    for (int i =0; i< count; i++) {
+        objc_property_t property = property_t[i];
+        NSString *key = [NSString stringWithUTF8String:property_getName(property)];
+        
+        id value = dict[key];
+        if (!value) continue;
+        //提取property的attribute信息
+        NSString *attribure = [NSString stringWithUTF8String:property_getAttributes(property)];
+        //从attribute信息中提取其class的信息
+        if ([attribure hasPrefix:@"T@"]) {
+            NSRange range =  [attribure rangeOfString:@"\","];
+            NSString *typeString = [attribure substringWithRange:NSMakeRange(3, range.location  - 3)];
+            
+            NSLog(@"the property class is %@",typeString);
+            //对非NS开头的class处理为嵌套的model，对model进行递归，转为模型
+            if (![typeString hasPrefix:@"NS"]) {
+                
+                Class modelClass = NSClassFromString(typeString);
+                value = [modelClass setModelWithDict:value];
+            }
+        }
+        //将字典中的值设置给模型
+        [Model setValue:value forKeyPath:key];
+    }
+    
+    free(property_t);
+    return Model;
+}
+@end
+```
+
+### 五、Runtime 需要知道的东西
+1. Category 的实现原理
+    * Category 实际上是 Category_t的结构体，在运行时，新添加的方法，都被以倒序插入到原有方法列表的最前面，所以不同的Category，添加了同一个方法，执行的实际上是最后一个。
+    * Category 在刚刚编译完的时候，和原来的类是分开的，只有在程序运行起来后，通过 Runtime ，Category 和原来的类才会合并到一起。
+
+2. isa指针的理解，对象的isa指针指向哪里？isa指针有哪两种类型？
+    * isa 等价于 is kind of
+      实例对象的 isa 指向类对象
+      类对象的 isa 指向元类对象
+      元类对象的 isa 指向元类的基类
+    * isa 有两种类型
+        纯指针，指向内存地址
+        NON_POINTER_ISA，除了内存地址，还存有一些其他信息
+    
+3. Objective-C 如何实现多重继承？
+     Object-c的类没有多继承,只支持单继承,如果要实现多继承的话，可使用如下    几种方式间接实现
+     * 通过组合实现 （A和B组合，作为C类的组件）
+     * 通过协议实现 （C类实现A和B类的协议方法）
+     * 消息转发实现 （forwardInvocation:方法）
+
+4. load 与 initialize 的区别
+    1. 以main为分界，load方法在main函数之前执行，initialize在main函数之后执行
+    2. 相同点
+        1. load和initialize会被自动调用，不能手动调用它们。
+        2. 子类实现了load和initialize的话，会隐式调用父类的load和initialize方法
+        3. load和initialize方法内部使用了锁，因此它们是线程安全的。
+
+    3. 不同点
+        1. 子类中没有实现load方法的话，不会调用父类的load方法；而子类如果没有实现initialize方法的话，也会自动调用父类的initialize方法。
+        2. load方法是在类被装在进来的时候就会调用，initialize在第一次给某个类发送消息时调用（比如实例化一个对象），并且只会调用一次，是懒加载模式，如果这个类一直没有使用，就不回调用到initialize方法。
+5. 使用场景
+    * load一般是用来交换方法Method Swizzle，由于它是线程安全的，而且一定会调用且只会调用一次，通常在使用UrlRouter的时候注册类的时候也在load方法中注册
+    * initialize方法主要用来对一些不方便在编译期初始化的对象进行赋值，或者说对一些静态常量进行初始化操作
+    
+6. runtime 如何实现 weak 属性？
+    weak 此特质表明该属性定义了一种「非拥有关系」(nonowning relationship)。为这种属性设置新值时，设置方法既不持有新值（新指向的对象），也不释放旧值（原来指向的对象）。
+
+runtime 对注册的类，会进行内存布局，从一个粗粒度的概念上来讲，这时候会有一个 hash 表，这是一个全局表，表中是用 weak 指向的对象内存地址作为 key，用所有指向该对象的 weak 指针表作为 value。当此对象的引用计数为 0 的时候会 dealloc，假如该对象内存地址是 a，那么就会以 a 为 key，在这个 weak 表中搜索，找到所有以 a 为键的 weak 对象，从而设置为 nil。
+
+runtime 如何实现 weak 属性具体流程大致分为 3 步：
+1. 初始化时：runtime 会调用 objc_initWeak 函数，初始化一个新的 weak 指针指向对象的地址。
+2. 添加引用时：objc_initWeak 函数会调用 objc_storeWeak() 函数，objc_storeWeak() 的作用是更新指针指向（指针可能原来指向着其他对象，这时候需要将该 weak 指针与旧对象解除绑定，会调用到 weak_unregister_no_lock），如果指针指向的新对象非空，则创建对应的弱引用表，将 weak 指针与新对象进行绑定，会调用到 weak_register_no_lock。在这个过程中，为了防止多线程中竞争冲突，会有一些锁的操作。
+3. 释放时：调用 clearDeallocating 函数，clearDeallocating 函数首先根据对象地址获取所有 weak 指针地址的数组，然后遍历这个数组把其中的数据设为 nil，最后把这个 entry 从 weak 表中删除，最后清理对象的记录。
+
+一篇简书的文章 https://www.jianshu.com/p/f73ea068efd2

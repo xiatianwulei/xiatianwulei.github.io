@@ -1,0 +1,240 @@
+---
+title: "switf 多线程 - GCD "
+date: 2019-12-12T17:49:34+08:00
+draft: false
+---
+
+#  switf 多线程 学习整理
+
+### 三、 Grand Central Dispatch（GCD）
+#### 1.介绍
+GCD是Apple开发的一个多核编程的解决方法，基本概念就是dispatch queue（调度队列），queue是一个对象，它可以接受任务，并将任务以先到先执行的顺序来执行。dispatch queue可以是并发的或串行的。GCD的底层依然是用线程实现，不过我们可以不用关注实现的细节。其优点有如下几点：
+（1）易用：GCD比thread更简单易用。基于block的特效使它能极为简单地在不同代码作用域之间传递上下文。
+（2）效率：GCD实现功能轻量，优雅，使得它在很多地方比专门创建消耗资源的线程更加实用且快捷。
+（3）性能：GCD自动根据系统负载来增减线程数量，从而减少了上下文切换并增加了计算效率。
+（4）安全：无需加锁或其他同步机制。
+
+#### 2. 创建队列
+（1）自己创建一个队列
+ 第一个参数代表队列的名称，可以任意起名
+第二个参数代表队列属于串行还是并行执行任务
+串行队列一次只执行一个任务。一般用于按顺序同步访问，但我们可以创建任意数量的      串行队列，各个串行队列之间是并发的。
+并行队列的执行顺序与其加入队列的顺序相同。可以并发执行多个任务，但是执行完成的顺序是随机的。
+
+```
+//创建串行队列
+let serial = DispatchQueue(label: "serialQueue1")
+//创建并行队列
+let concurrent = DispatchQueue(label: "concurrentQueue1", attributes: .concurrent)
+```
+（2）获取系统存在的全局队列 
+
+Global Dispatch Queue有4个执行优先级：
+.userInitiated  高
+.default  正常
+.utility  低
+.background 非常低的优先级（这个优先级只用于不太关心完成时间的真正的后台任务）
+```
+let globalQueue = DispatchQueue.global(qos: .default)
+```
+（3）运行在主线程的Main Dispatch Queue
+正如名称中的Main一样，这是在主线程里执行的队列。因为主线程只有一个，所有这自然是串行队列。一起跟UI有关的操作必须放在主线程中执行。
+
+```
+let mainQueue = DispatchQueue.main
+```
+
+#### 3. 添加任务到队列的两种方法 
+
+（1）async异步追加Block块（async函数不做任何等待）
+
+```
+DispatchQueue.global(qos: .default).async {
+    //处理耗时操作的代码块...
+    print("do work")
+     
+    //操作完成，调用主线程来刷新界面
+    DispatchQueue.main.async {
+        print("main refresh")
+    }
+}
+```
+
+（2）sync同步追加Block块 
+同步追加Block块，与上面相反。在追加Block结束之前，sync函数会一直等待，等待队列前面的所有任务完成后才能执行追加的任务。
+
+```
+//添加同步代码块到global队列
+//不会造成死锁，但会一直等待代码块执行完毕
+DispatchQueue.global(qos: .default).sync {
+    print("sync1")
+}
+print("end1")
+ 
+ 
+//添加同步代码块到main队列
+//会引起死锁
+//因为在主线程里面添加一个任务，因为是同步，所以要等添加的任务执行完毕后才能继续走下去。但是新添加的任务排在
+//队列的末尾，要执行完成必须等前面的任务执行完成，由此又回到了第一步，程序卡死
+DispatchQueue.main.sync {
+    print("sync2")
+}
+print("end2")
+```
+
+#### 4. 暂停或者继续队列
+这两个函数是异步的，而且只在不同的blocks之间生效，对已经正在执行的任务没有影响。
+suspend()后，追加到Dispatch Queue中尚未执行的任务在此之后停止执行。
+而resume()则使得这些任务能够继续执行。
+
+```
+//创建并行队列
+let conQueue = DispatchQueue(label: "concurrentQueue1", attributes: .concurrent)
+//暂停一个队列
+conQueue.suspend()
+//继续队列
+conQueue.resume()
+```
+#### 5. 只执行一次
+过去dispatch_once中的代码块在应用程序里面只执行一次，无论是不是多线程。因此其可以用来实现单例模式，安全，简洁，方便。
+```
+//往dispatch_get_global_queue队列中添加代码块，只执行一次
+var predicate:dispatch_once_t = 0
+dispatch_once(&predicate, { () -> Void in
+    //只执行一次，可用于创建单例
+    println("work")
+})
+```
+在Swift3中，dispatch_once被废弃了，我们要替换成其他全局或者静态变量和常量.
+```
+private var once1:Void = {
+    //只执行一次
+    print("once1")
+}()
+ 
+private lazy var once2:String = {
+    //只执行一次，可用于创建单例
+    print("once2")
+    return "once2"
+}()
+```
+
+#### 6. asyncAfter 延迟调用
+asyncAfter 并不是在指定时间后执行任务处理，而是在指定时间后把任务追加到queue里面。因此会有少许延迟。注意，我们不能（直接）取消我们已经提交到 asyncAfter 里的代码。
+```
+//延时2秒执行
+DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 2.0) {
+    print("after!")
+}
+```
+
+如果需要取消正在等待执行的Block操作，我们可以先将这个Block封装到DispatchWorkItem对象中，然后对其发送cancle，来取消一个正在等待执行的block。
+
+```
+//将要执行的操作封装到DispatchWorkItem中
+let task = DispatchWorkItem { print("after!") }
+//延时2秒执行
+DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2, execute: task)
+//取消任务
+task.cancel()
+```
+
+#### 7. 多个任务全部结束后做一个全部结束的处理
+async(group:)：用来监视一组block对象的完成，你可以同步或异步地监视
+notify()：用来汇总结果，所有任务结束汇总，不阻塞当前线程
+wait()：等待直到所有任务执行结束，中途不能取消，阻塞当前线程
+
+```
+//获取系统存在的全局队列
+let queue = DispatchQueue.global(qos: .default)
+//定义一个group
+let group = DispatchGroup()
+//并发任务，顺序执行
+queue.async(group: group) {
+    sleep(2)
+    print("block1")
+}
+queue.async(group: group) {
+    print("block2")
+}
+queue.async(group: group) {
+    print("block3")
+}
+ 
+//1,所有任务执行结束汇总，不阻塞当前线程
+group.notify(queue: .global(), execute: {
+    print("group done")
+})
+ 
+//2,永久等待，直到所有任务执行结束，中途不能取消，阻塞当前线程
+group.wait()
+print("任务全部执行完成")
+
+运行结构：
+    block2
+    blcok3
+    block1
+    group done
+    任务全部执行完成了
+```
+
+#### 8 .concurrentPerform 指定次数的Block最加到队列中
+DispatchQueue.concurrentPerform函数是sync函数和Dispatch Group的关联API。按指定的次数将指定的Block追加到指定的Dispatch Queue中，并等待全部处理执行结束。
+因为concurrentPerform函数也与sync函数一样，会等待处理结束，因此推荐在async函数中异步执行concurrentPerform函数。concurrentPerform函数可以实现高性能的循环迭代
+
+```
+//获取系统存在的全局队列
+let queue = DispatchQueue.global(qos: .default)
+ 
+//定义一个异步步代码块
+queue.async {
+    //通过concurrentPerform，循环变量数组
+    DispatchQueue.concurrentPerform(iterations: 6) {(index) -> Void in
+        print(index)
+    }
+     
+    //执行完毕，主线程更新
+    DispatchQueue.main.async {
+        print("done")
+    }
+}
+
+运行结果:
+    1
+    3
+    2
+    0
+    4
+    5
+    done
+```
+
+#### 9. 信号，信号量
+DispatchSemaphore(value: )：用于创建信号量，可以指定初始化信号量计数值，这里我们默认1.
+semaphore.wait()：会判断信号量，如果为1，则往下执行。如果是0，则等待。
+semaphore.signal()：代表运行结束，信号量加1，有等待的任务这个时候才会继续执行。
+
+```
+//获取系统存在的全局队列
+let queue = DispatchQueue.global(qos: .default)
+ 
+//当并行执行的任务更新数据时，会产生数据不一样的情况
+for i in 1...10 {
+    queue.async {
+        print("\(i)")
+    }
+}
+ 
+//使用信号量保证正确性
+//创建一个初始计数值为1的信号
+let semaphore = DispatchSemaphore(value: 1)
+for i in 1...10 {
+    queue.async {
+        //永久等待，直到Dispatch Semaphore的计数值 >= 1
+        semaphore.wait()
+        print("\(i)")
+        //发信号，使原来的信号计数值+1
+        semaphore.signal()
+    }
+}
+```

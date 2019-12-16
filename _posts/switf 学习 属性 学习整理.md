@@ -1,0 +1,211 @@
+---
+title: "switf 属性 学习整理"
+date: 2019-12-12T17:49:34+08:00
+draft: false
+---
+
+
+# switf 属性 学习整理
+
+#### 1. Swift - 属性观察者（willSet与didSet）
+属性观察者，类似于触发器。用来监视属性的除初始化之外的属性值变化，当属性值发生改变时可以对此作出响应。有如下特点：
+
+1，不仅可以在属性值改变后触发didSet，也可以在属性值改变前触发willSet。
+2，给属性添加观察者必须要声明清楚属性类型，否则编译器报错。
+3，willSet可以带一个newName的参数，没有的话，该参数默认命名为newValue。
+4，didSet可以带一个oldName的参数，表示旧的属性，不带的话默认命名为oldValue。
+5，属性初始化时，willSet和didSet不会调用。只有在初始化上下文之外，当设置属性值时才会调用。
+6，即使是设置的值和原来值相同，willSet和didSet也会被调用
+```
+class People
+{
+    //普通属性
+    var firstName:String = ""
+    var lastName:String  = ""
+    var nickName:String  = ""
+     
+    //计算属性
+    var fullName:String
+    {
+        get
+        {
+            return nickName + " " + firstName + " " + lastName
+        }
+    }
+     
+    //带属性监视器的普通属性
+    var age:Int = 0
+    {
+        //我们需要在age属性变化前做点什么
+        willSet
+        {
+            print("Will set an new value \(newValue) to age")
+        }
+        //我们需要在age属性发生变化后，更新一下nickName这个属性
+        didSet
+        {
+            print("age filed changed form \(oldValue) to \(age)")
+            if age<10
+            {
+                nickName = "Little"
+            }else
+            {
+                nickName = "Big"
+            }
+        }
+    }
+     
+    func toString() -> String
+    {
+        return "Full Name: \(fullName) " + ", Age: \(age) "
+    }
+     
+}
+ 
+let me = People()
+me.firstName = "Li"
+me.lastName  = "Lei"
+me.age = 30
+ 
+print(me.toString())
+ 
+/*程序输出
+Will set an new value 30 to age
+age filed changed form 0 to 30
+Full Name: Big Li Lei , Age: 30
+*/
+```
+
+#### 2. switf 计算属性和存储属性
+
+```
+    1. var arr1:[Int] =  {
+        return [1,2,3];
+       }()
+       
+    2. var arr2:[Int] {
+        return [1,2,3];
+        }
+        
+    3. var arr3:[Int] {
+        get {
+            return [1,2,3];
+        }
+    }
+    4. var arr4:[Int] {
+        get {
+            return [1];
+        }
+        
+        set {
+            print(newValue);
+        }
+    }
+```
+
+`1、声明一个存储属性，通过闭包运算赋值。
+ 2、3 作用相同，2是3 的简化形式。声明一个计算属性。只读。
+ 4、声明一个计算属性，可读可写。
+`
+
+*由此看出，存储属性可以直接读写赋值。计算属性不能直接对其操作，其本身只起计算作用，没有具体的值。*
+
+**存储属性和计算属性比较**
+1. 计算属性可以用于类、结构体和枚举，存储属性只能用于类和结构体。
+2. 存储属性可以是变量存储属性(用关键字 var 定义)，也可以是常量存储属性(用关键字 let 定义)。计算属性只能(用关键字 var 定义)。
+3. 计算属性不直接存储值，而是提供一个 getter 和一个可 选的 setter，来间接获取和设置其他属性或变量的值。
+4. 可以为除了延迟存储属性之外的其他存储属性添加属性观察器，也可以通过重写属性的方式为继承的属性(包括 存储属性和计算属性)添加属性观察器。你不必为非重写的计算属性添加属性观察器，因为可以通过它的 setter 直接监控和响应值的变化。
+
+#### 3. 延迟存储属性
+* 延迟存储属性是指第一次被调用的时候才会计算其初始值的属性，就是常说的懒加载。
+* Swift在属性前加lazy关键字来标记一个延迟存储属性，延迟存储属性必须用变量（var关键字）。
+* 当属性依赖其他外部因素影响（如构造过程，初始值复杂，大量计算），适合用延迟属性
+
+```
+// DataImporter是一个导入数据的类，导入过程会消耗大量的时间
+class DataImporter {
+    
+    var fileName = "data.text"
+    /** 导入数据 **/
+}
+// DataManager用来管理和提供对这个字符串数组的访问
+
+class DataManager {
+    
+    lazy var importer = DataImporter()
+    var data = [String]()
+    /** 管理数据 **/
+
+}
+
+let manager = DataManager()
+
+manager.data.append("someData")
+manager.data.append("someMore")
+```
+简单描述了一个DataManager类，导入文件的过程。DataManager用来管理数据的导入，依赖与DataImporter的功能。导入数据消耗太多的时间，而且DataManager也可能不导入数据就完成了管理数据的过程。DataImporter不需要立刻创建，只有在使用的时候才去创建。
+#### 4.全局变量和局部变量
+* 全局变量是在函数、方法、闭包或者其他类型之外定义的变量。局部变量是在函数、方法、或者闭包内定义的。
+* 计算属性和属性观察器所描述的模式也可以用于全局变量和局部变量。
+默认的全局和局部变量都是存储型变量，跟存储属性类似，它提供存储空间，并且允许读取和写入
+* 全局和局部变量都可以定义计算属性和添加属性观察器。
+ 
+**注意！！**
+* 全局的常量或者变量都是延迟计算的，跟延迟存储属性不同的地方在于，全局的常量或者变量不需要标记lazy。
+* 局部范围的常量或者变量不会延迟计算。
+
+#### 5. 类型属性
+*实例的属性属于一个特定的实例，实例之间的属性相互独立，也可以为类型本身设置属性，不管类有多少的实例，这些属性只有唯一一份，这个就是类型属性。*
+
+* 类型属性，比如所有实例都有一个常量（类似C语言的静态常量），或者拥有一个变量（类似C语言的动态变量）。
+* 值类型的存储类型属性可以是变量或者常量，计算型属性跟计算属性一样只能定义成变量属性。
+注意！！
+* 必须给存储型类型属性，指定一个默认值，因为类型本身，无法在初始化过程中，使用构造器给类型属性赋值、
+* 存储型类型属性是延迟初始化的，并且不要加lazy,多线程同时访问也只会初始化一次。
+
+类型属性的使用
+在Swift中，类型属性是类型定义的一部分，写在类型最外层花括号内，作用域就是在该类型支持的范围内。
+
+* 用关键字static来定义类型属性
+* 在类中，用关键字class来支持子类对父类的实现进行重写。
+ 
+```
+// 只写了只读计算型类型属性
+struct MyStruct{
+
+    static var storedTypeProperty = "Some Value"
+    
+    static var comutedTypeProperty : Int{
+        return 998
+    }
+}
+
+enum MyEnum{
+    static var storedTypeProperty = "Some Value"
+    
+    static var comutedTypeProperty : Int{
+        return 998
+    }
+    
+}
+class MyClass {
+    static var storedTypeProperty = "Some Value"
+    
+    static var comutedTypeProperty : Int{
+        return 998
+    }
+    class var overridedableComutedTypeProperty : Int{
+        return 100
+    }
+}
+
+```
+**补充：static 与 class 的区别**
+
+* static 可以在类、结构体、或者枚举中使用。而 class 只能在类中使用。
+* static 可以修饰存储属性，static 修饰的存储属性称为静态变量(常量)。而 class 不能修饰存储属性。
+* static 修饰的计算属性不能被重写。而 class 修饰的可以被重写。
+* static 修饰的静态方法不能被重写。而 class 修饰的类方法可以被重写。
+* class 修饰的计算属性被重写时，可以使用 static 让其变为静态属性。
+* class 修饰的类方法被重写时，可以使用 static 让方法变为静态方法。
+
