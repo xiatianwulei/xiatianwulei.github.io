@@ -1,8 +1,13 @@
-
 ---
-title: "FMDB安装和使用 学习整理"
-date: 2019-12-12T17:49:34+08:00
-draft: false
+layout:     post
+title:      FMDB 安装和使用 
+subtitle:   
+date:       2017-01-06
+author:     夏天无泪
+header-img: img/post-bg-ios9-web.jpg?raw=true
+catalog: true
+tags:
+    - Switf
 ---
 
 
@@ -35,22 +40,24 @@ draft: false
 1）GiThub 地址：https://github.com/ccgus/fmdb
 2) 安装cocopods 这就不做解释了 cd：项目目录 pod init 创建podfile文件，然后执行pod instal 文件
 
- ![-w642](/media/15759433308350/15759479989438.jpg)
+
+
+ ![-w642](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/15759433308350/15759479989438.jpg?raw=true)
  
 **当然你也可以把项目下载下来直接导入。
 注意：fmdb 文件夹中的 info.plist 要删除掉** 
 
 1） FMDB已经导入进来了
-![-w272](/media/15759433308350/15759483148299.jpg)
+![-w272](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/15759433308350/15759483148299.jpg?raw=true)
 
 2） 因为我搭建的项目是switf ，所以要做个桥接文件。
 **补充下 创建桥接文件随便创建个oc 类然后选择'Create Bridging Header' **
-![-w771](/media/15759433308350/15759589317188.jpg)
+![-w771](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/15759433308350/15759589317188.jpg?raw=true)
 * 创建完桥接文件并把FMDB头文件类引进来
-![-w1058](/media/15759433308350/15760290225713.jpg)
+![-w1058](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/15759433308350/15760290225713.jpg?raw=true)
 
 3）在 Build Phases -> Link Binary With Libraries 中点击加号，添加 libsqlite3.0.tbd 到项目中来
-![-w821](/media/15759433308350/15759593278464.jpg)
+![-w821](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/15759433308350/15759593278464.jpg?raw=true)
 
 
 #### 2.FMDB 封装工具类
@@ -113,9 +120,9 @@ class ViewController: UIViewController {
 
 ```
 **数据库成功打开了**
-![-w473](/media/15759433308350/15759600817293.jpg)
+![-w473](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/15759433308350/15759600817293.jpg?raw=true)
 **本地文件**
-![-w777](/media/15759433308350/15759614116344.jpg)
+![-w777](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/15759433308350/15759614116344.jpg?raw=true)
 
 **介绍个简单的数据管理工具 **
 下载地址：https://xclient.info/s/datum.html#versions
@@ -140,7 +147,7 @@ SQLite3 ：关系型数据库，不能直接存储对象，要将对象拆开存
          db.close()
 ```
 这个数据库创建成功了
-![-w951](/media/15759433308350/15759721239000.jpg)
+![-w951](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/15759433308350/15759721239000.jpg?raw=true)
      
 #### 4.数据库的操作使用
 **数据库创建完后，对数据库进行 增 删 改 查操作**
@@ -168,7 +175,7 @@ SQLite3 ：关系型数据库，不能直接存储对象，要将对象拆开存
 
 ```
 * 给表添加一个新字段 let sql = "ALTER TABLE User ADD phone TEXT;"
-![-w900](/media/15759433308350/15760340814326.jpg)
+![-w900](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/15759433308350/15760340814326.jpg?raw=true)
 
 2) 删
 ```
