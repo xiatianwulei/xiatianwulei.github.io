@@ -1,10 +1,16 @@
 ---
-title: "Peripheryapp的使用 学习整理"
-date: 2019-12-12T17:49:34+08:00
-draft: false
+layout:     post
+title:      Peripheryapp 进阶
+subtitle:   
+date:       2019-02-09
+author:     夏天无泪
+header-img: img/post-bg-ios9-web.jpg
+catalog: true
+tags:
+   - 学习扩展
 ---
 
-# Peripheryapp的使用 学习整理
+# Peripheryapp的使用 
 
 *源地址：*
  https://github.com/peripheryapp/periphery#installation
