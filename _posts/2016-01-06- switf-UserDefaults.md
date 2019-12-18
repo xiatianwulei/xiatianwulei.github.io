@@ -1,19 +1,19 @@
 ---
 layout:     post
-title:      UserDefaults 
+title:      UserDefaults 使用
 subtitle:   
 date:       2018-01-06
 author:     夏天无泪
-header-img: img/post-bg-ios9-web.jpg
+header-img: img/post-bg-coffee.jpg
 catalog: true
 tags:
     - Switf
-    - 学习整理
 ---
 
-#  switf 使用UserDefaults来进行本地数据存储 学习整理
+#  switf 使用UserDefaults来进行本地数据存储 
 
-#### 注意点
+#### **注意点**
+
 * 一般来说本地存储数据我们还可以是用 SQlite 数据库，或者使用自己建立的 plist 文件什么的，但这还得自己显示创建文件，读取文件，很麻烦，而是用 UserDefaults 则不用管这些东西，就像读字符串一样，直接读取就可以了。
 * UserDefaults 支持的数据格式也很多，有：Int，Float，Double，BOOL，Array，Dictionary，甚至 Any 类型。
 * UserDefaults 里面的数据最终是保存到 .plist 文件中，理论上 UserDefaults 存放好几个 G 的数据是可以实现的（取决于设备剩余的空间）。
@@ -70,8 +70,9 @@ userDefault.set(dictionary, forKey: "Dictionary")
 dictionary = userDefault.dictionary(forKey: "Dictionary") as! [String : String]
 ```
 
-2、系统对象的存储与读取
-* 系统对象实现存储，需要通过 archivedData 方法转换成 Data 为载体，才可以存储。下面以 UILabel 对象为例：
+2、系统对象的存储与读取   
+***系统对象实现存储，需要通过 archivedData 方法转换成 Data 为载体，才可以存储。***  
+下面以 UILabel 对象为例：
 
 ```
 let userDefault = UserDefaults.standard
@@ -91,7 +92,7 @@ let objData = userDefault.data(forKey: "labelData")
 let myLabel = NSKeyedUnarchiver.unarchiveObject(with: objData!) as? UILabel
 print(myLabel)
 ```
-补充： 
+**补充：**  
 对于 UIImage 对象的存储比较特殊。注意下方高亮部分，如果我们过直接把 image1 存储起来，再取出转换回 UIImage 就变成了 nil。必须先转成 image2 再存储。
 
 ```
@@ -158,7 +159,8 @@ class UserInfo: NSObject, NSCoding {
 ```
 
 4、 删除对象 和 数据同步
+
 ```
-UserDefaults.standard.removeObject(forKey: "ge")
+ UserDefaults.standard.removeObject(forKey: "ge")
  UserDefaults.standard.synchronize() /// 同步
 ```
