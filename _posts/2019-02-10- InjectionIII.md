@@ -11,7 +11,7 @@ tags:
 ---
 
 # InjectionIII 使用 学习整理
-**iOS Switf 通过注入动态库的方式实现极速编译调试(InjectionIII、热重载、热编译)原理解析**
+**iOS swift 通过注入动态库的方式实现极速编译调试(InjectionIII、热重载、热编译)原理解析**
 
 #### 一、安装 与 使用
 
@@ -36,7 +36,7 @@ tags:
 	#if DEBUG
 	//or oc
 	[[NSBundle bundleWithPath:@"/Applications/InjectionIII.app/Contents/Resources/iOSInjection.bundle"] load];
-	//or switf
+	//or swift
 	Bundle(path: "/Applications/InjectionIII.app/Contents/Resources/iOSInjection.bundle")?.load()
 	//for tvOS:
 	Bundle(path: "/Applications/InjectionIII.app/Contents/Resources/tvOSInjection.bundle")?.load()

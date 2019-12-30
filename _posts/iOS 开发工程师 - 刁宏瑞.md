@@ -24,7 +24,7 @@ table th:nth-of-type(2) {
 | E-mail | 568378964@qq.com |
 | 电话 | 18501393475 |
 | 工作年限 | 5年 |
-| 技术博客 |  |
+| 技术博客 |  xiatianwulei.github.io
 | 求职意向 | iOS开发工程师 |
 
 ---
