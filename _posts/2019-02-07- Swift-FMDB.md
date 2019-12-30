@@ -7,11 +7,11 @@ author:     夏天无泪
 header-img: img/post-bg-ios9-web.jpg?raw=true
 catalog: true
 tags:
-    - Switf
+    - Swift
 ---
 
 
-# switf FMDB安装和使用 - 学习整理
+# swift FMDB安装和使用 - 学习整理
 
 ### FMDB
 
@@ -54,7 +54,7 @@ tags:
 1） FMDB已经导入进来了
 ![-w272](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/15759433308350/15759483148299.jpg?raw=true)
 
-2） 因为我搭建的项目是switf ，所以要做个桥接文件。
+2） 因为我搭建的项目是swift ，所以要做个桥接文件。
 **补充下 创建桥接文件随便创建个oc 类然后选择'Create Bridging Header'**  
 
 ![-w771](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/15759433308350/15759589317188.jpg?raw=true)

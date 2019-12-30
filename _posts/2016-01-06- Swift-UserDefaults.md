@@ -7,10 +7,10 @@ author:     夏天无泪
 header-img: img/post-bg-coffee.jpg
 catalog: true
 tags:
-    - Switf
+    - Swift
 ---
 
-#  switf 使用UserDefaults来进行本地数据存储 
+#  swift 使用UserDefaults来进行本地数据存储 
 
 #### **注意点**
 
