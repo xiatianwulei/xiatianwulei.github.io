@@ -98,8 +98,8 @@ service-worker: true
 # Friends
 friends: [
     {
-        title: "简书·夏天无泪",
-        href: "https://www.jianshu.com/u/ee4000b12221"
+        title: "JingChengBlog",
+        href: "https://lijingcheng.github.io/"
     },{
         title: "Apple",
         href: "https://apple.com"
