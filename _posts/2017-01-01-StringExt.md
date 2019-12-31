@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      swiftExt 学习整理
+title:      swiftExt 整理
 subtitle:   
 date:       2017-01-06
 author:     夏天无泪
-header-img: post-bg-hacker.jpg
+header-img: post-bg-iWatch.jpg
 catalog: true
 tags:
     - SwiftExt
