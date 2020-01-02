@@ -10,6 +10,11 @@ tags:
     - SwiftExt
 ---
 
+## UIViewExt
+
+**UIView**  
+
+继承自UIResponder，间接继承自NSObject，主要是用来构建用户界面的，并且可以响应事件。对于UIView，侧重于对内容的显示管理；其实是相对于CALayer的高层封装。  
 
 ```
 **通过UIView对象找到其所在的UIViewController**
@@ -27,3 +32,5 @@ extension UIView {
     }
 }
 ```
+
+##**待补充**
