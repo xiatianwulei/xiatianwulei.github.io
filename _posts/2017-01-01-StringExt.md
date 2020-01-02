@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      swiftExt 整理
+title:      StringExt
 subtitle:   
 date:       2017-01-06
 author:     夏天无泪
