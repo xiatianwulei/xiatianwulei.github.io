@@ -108,7 +108,6 @@ tags:
 
 通过Interface知道xib或者storyboard本身就是一个xml文件，添加删除控件必然中间多了一个`encode/decode`过程，增加了cpu的计算量。并且还要避免臃肿的 XIB 文件，因为XIB文件在主线程中进行加载布局。当用到一些自定义View或者XIB文件时，XIB的加载会把所有内容加载进来，如果XIB里面的一些控件并不会用到，这就可能造成一些资源的消耗浪费。
 
-比如使用纯代码布局，使用masonry约束布局或者手动计算布局。本人就是完全抛弃了storyboard和xib。
   
 **示例代码**  
 
