@@ -595,6 +595,6 @@ https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/UIV
 
 >每次当我们滑动时，图片不显示，因为这个时候runloop不处于kCFRunLoopBeforeWaiting状态。当我们停止拖拽滑动时，runloop 处于kCFRunLoopBeforeWaiting状态，然后加载绘制图片。
   
-借鉴的开源项目[VVeboTableViewDemo](https://github.com/johnil/VVeboTableViewDemo)
-### 没总结完
+借鉴的开源项目[VVeboTableViewDemo](https://github.com/johnil/VVeboTableViewDemo)  
+
 
