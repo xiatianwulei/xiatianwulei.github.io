@@ -20,7 +20,7 @@ tags:
 
 >我们知道CPU的主要负责快速调度任务,大量计算工作,所以在tableView快速滚动的过程中让CPU的计算量降低是优化应该考虑的方向.下面总结了三个方面来尽可能的降低CPU计算:   
 
-我们知道tableView的代理回调方法中,先调用的是返回cell高度的方法,然后在返回实例化cell的方法.我们可以在返回cell高度时,提前计算好cell的高度,缓存到数据源模型中。  
+**我们知道tableView的代理回调方法中,先调用的是返回cell高度的方法,然后在返回实例化cell的方法.我们可以在返回cell高度时,提前计算好cell的高度,缓存到数据源模型中。**   
 
 **实例代码如下:**  
 
@@ -110,7 +110,7 @@ tags:
 
 比如使用纯代码布局，使用masonry约束布局或者手动计算布局。本人就是完全抛弃了storyboard和xib。
   
-** 示例代码；**  
+**示例代码**  
 
 * **CalculateNewsCell.h**  
 
@@ -240,7 +240,9 @@ UILabel *titleLbe = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth
 }
 ```  
 
-https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/UIVivew渲染和卡顿/0DF84BB1D897D9C0C6EA5D9DF8B3B14E.png?raw=true
+
+
+![](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/UIVivew%E6%B8%B2%E6%9F%93%E5%92%8C%E5%8D%A1%E9%A1%BF/0DF84BB1D897D9C0C6EA5D9DF8B3B14E.png?raw=true)
 
 
 **UITableViewDataSource 数据源**  
@@ -371,7 +373,7 @@ https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/UIV
 
 #### 2.异步绘制数据  
 
-在赋值数据模型里面进行内容的绘制  
+**在赋值数据模型里面进行内容的绘制 ** 
 
 ```
 #pragma mark - set
@@ -452,10 +454,11 @@ https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/UIV
     [self drawText];
     [self loadThumb];
     [self setData];
-}  
+}
+ 
 ```  
 
-}
+
 其中我们用了一个大神封装好的` VVeboLabel`，详细源码项目链接中有,有需要自行查阅。  
 
 ```  
@@ -492,7 +495,7 @@ https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/UIV
 
 ### 四.延时加载图片  
 
-Runloop每次循环都会对你界面上的UI绘制一遍，主要是速度快，我们看不出来，当界面中出现高清的图片时因为绘制的慢，就会导致卡顿。 所以我们监听runloop的状态，每次即将休眠的时候，即处于kCFRunLoopBeforeWaiting状态时才去绘制加载图片。
+Runloop每次循环都会对你界面上的UI绘制一遍，主要是速度快，我们看不出来，当界面中出现高清的图片时因为绘制的慢，就会导致卡顿。 所以我们监听runloop的状态，每次即将休眠的时候，即处于`kCFRunLoopBeforeWaiting`状态时才去绘制加载图片。
 
 **核心代码如下：**  
 
@@ -548,7 +551,6 @@ static void Callback(CFRunLoopObserverRef observer, CFRunLoopActivity activity, 
         // d干掉第一个任务
         [vc.tasks removeObjectAtIndex:0];
     }
-    
 ```  
    
  * 将加载绘制图片丢到任务中  
@@ -591,7 +593,7 @@ static void Callback(CFRunLoopObserverRef observer, CFRunLoopActivity activity, 
 }
 ``` 
 
-https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/UIVivew渲染和卡顿/1E55FC2FAA911853B96265E700BDBD35.png?raw=true  
+![](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/UIVivew渲染和卡顿/1E55FC2FAA911853B96265E700BDBD35.png?raw=true)  
 
 >每次当我们滑动时，图片不显示，因为这个时候runloop不处于kCFRunLoopBeforeWaiting状态。当我们停止拖拽滑动时，runloop 处于kCFRunLoopBeforeWaiting状态，然后加载绘制图片。
   
