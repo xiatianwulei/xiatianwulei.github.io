@@ -102,7 +102,7 @@ tags:
 ```  
 
 >注意事项:
-如果是纯代码书写，UITableViewCell视图中给UILabel赋值完 text后，一定要调用fitSizeHeight方法，把空间的宽度设置好，不能调用系统的sizeToFit方法，要不然高度会计算错误。  
+UITableViewCell视图中给UILabel赋值完 text后，把控件的宽度设置好，不能调用系统的sizeToFit方法，要不然高度会计算错误。  
 
 #### 2、尽可能的减少storyboard,xib的使用  
 
