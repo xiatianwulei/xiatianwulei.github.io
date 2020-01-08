@@ -102,25 +102,14 @@ tags:
 ```  
 
 >注意事项:
-1.UITableViewCell视图中给UILabel赋值完 text后，一定要调用fitSizeHeight方法，不能调用系统的sizeToFit方法，要不然高度会计算错误。  
+如果是纯代码书写，UITableViewCell视图中给UILabel赋值完 text后，一定要调用fitSizeHeight方法，把空间的宽度设置好，不能调用系统的sizeToFit方法，要不然高度会计算错误。  
 
 #### 2、尽可能的减少storyboard,xib的使用  
 
-通过Interface知道xib或者storyboard本身就是一个xml文件，添加删除控件必然中间多了一个`encode/decode`过程，增加了cpu的计算量。并且还要避免臃肿的 XIB 文件，因为XIB文件在主线程中进行加载布局。当用到一些自定义View或者XIB文件时，XIB的加载会把所有内容加载进来，如果XIB里面的一些控件并不会用到，这就可能造成一些资源的消耗浪费。
+通过Interface知道xib或者storyboard本身就是一个xml文件，添加删除控件必然中间多了一个`encode/decode`过程，增加了cpu的计算量。并且还要避免臃肿的 XIB 文件，因为XIB文件在主线程中进行加载布局。当用到一些自定义View或者XIB文件时，XIB的加载会把所有内容加载进来，如果XIB里面的一些控件并不会用到，这就可能造成一些资源的消耗浪费。现在越做越好，我个人还是比较喜欢用xib开发，直观、方便、代码更加清晰整洁。
 
   
 **示例代码**  
-
-* **CalculateNewsCell.h**  
-
-``` 
-@class NewsModel;
-/// 缓存 cell 的高度
-@interface CalculateNewsCell : UITableViewCell
-/** model */
-@property(nonatomic, strong)NewsModel *model;
-@end
-```   
 
 * **CalculateNewsCell.m**  
 
@@ -195,7 +184,7 @@ UILabel *titleLbe = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth
 }
 ```  
 
-> 本示例中就是将头像尺寸，标题，副标题，最下面的分享按钮，评论按钮，点赞按钮等视图尺寸固定，只是更新内容即可，避免了 CPU 的计算。
+> 项目中 头像尺寸，标题，副标题，最下面的分享按钮，评论按钮，点赞按钮等视图尺寸固定，只是更新内容即可，避免了 CPU 的计算。
 
 
 ### 二、 按需加载  
@@ -272,7 +261,8 @@ UILabel *titleLbe = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth
 }
 ```  
 
-* **一键返回至顶部方法判断**  
+* 补充一个情况：  
+ 一键返回至顶部方法判断  
 
 ```
 // 开始滚动到顶部
@@ -458,7 +448,7 @@ UILabel *titleLbe = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth
 ```  
 
 
-其中我们用了一个大神封装好的` VVeboLabel`，详细源码项目链接中有,有需要自行查阅。  
+有一个大神封装好的` VVeboLabel`，值得我们去学习下。  
 
 ```  
 - (void)drawText {
@@ -595,7 +585,9 @@ static void Callback(CFRunLoopObserverRef observer, CFRunLoopActivity activity, 
 ![](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/UIVivew渲染和卡顿/1E55FC2FAA911853B96265E700BDBD35.png?raw=true)  
 
 >每次当我们滑动时，图片不显示，因为这个时候runloop不处于kCFRunLoopBeforeWaiting状态。当我们停止拖拽滑动时，runloop 处于kCFRunLoopBeforeWaiting状态，然后加载绘制图片。
+
+更多详细代码参考项目链接中的`DelayLoadImgViewController`类
   
-借鉴的开源项目[VVeboTableViewDemo](https://github.com/johnil/VVeboTableViewDemo)  
+详细的代码[夏天无泪学习项目](https://github.com/xiatianwuleiLearning/PerformanceOptimizeDemo) 里供大家参考。
 
 
