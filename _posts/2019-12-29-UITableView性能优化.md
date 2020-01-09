@@ -587,6 +587,11 @@ static void Callback(CFRunLoopObserverRef observer, CFRunLoopActivity activity, 
 >每次当我们滑动时，图片不显示，因为这个时候runloop不处于kCFRunLoopBeforeWaiting状态。当我们停止拖拽滑动时，runloop 处于kCFRunLoopBeforeWaiting状态，然后加载绘制图片。
 
 更多详细代码参考项目链接中的`DelayLoadImgViewController`类
+
+**优化效果展示：**  
+
+![](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/UIVivew渲染和卡顿/1653926-d2fda8ac898ea24b.gif?raw=true)  
+
   
 详细的代码[夏天无泪学习项目](https://github.com/xiatianwuleiLearning/PerformanceOptimizeDemo) 里供大家参考。
 
