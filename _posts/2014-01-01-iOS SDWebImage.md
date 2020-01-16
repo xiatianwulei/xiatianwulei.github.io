@@ -7,14 +7,14 @@ author:     夏天无泪
 header-img: img/post-bg-ios9-web.jpg
 catalog: true
 tags:
-    - iOS
+    - 学习整理
 ---  
 
 # iOS SDWebImage  
 
 > 在项目中使用SDWebImage来管理图片加载相关操作可以极大地提高开发效率，让我们更加专注于业务逻辑实现。版本为4.4.2版本。  
 
-## 一、SDWebImage 功能  
+### 一、SDWebImage 功能  
 
 >SDWebImage是个支持异步下载与缓存的UIImageView扩展  
 
@@ -33,7 +33,7 @@ tags:
 11.支持后台图片解压缩处理  
 12.项目支持的图片格式包括 PNG,JPEG,GIF,Webp等  
 
-## 二 、SDWebImage组织架构  
+### 二 、SDWebImage组织架构  
 
 ![](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/iOS_tupian/792D48A1-4E2A-4E9F-8BE5-8628222AEC70.png?raw=true)  
 
@@ -47,7 +47,7 @@ tags:
 * `SDWebImagePrefetcher`:负责图片的预取；
 * `UIImageView+WebCache`:和其他的扩展都是与用户直接打交道的。  
 
-其中，最重要的三个类就是SDWebImageDownloader、SDImageCache、SDWebImageManager。
+其中，最重要的三个类就是`SDWebImageDownloader`、`SDImageCache`、`SDWebImageManager`。
 
 ![](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/iOS_tupian/C5973F5A-5E97-4905-9F38-008F65EC799C.png?raw=true)  
 
@@ -56,13 +56,13 @@ tags:
 * `SDWebImageDownloaderOperation`真正执行下载请求；最底层的两个类为高层抽象提供支持。  
 
 
-## 三、SDWebImage 功能类分析  
+### 三、SDWebImage 功能类分析  
 
 **我们按照上图中从上到下执行的流程来研究各个类**  
 
-###  1.UIImageView+WebCache   
+####  1.UIImageView+WebCache   
 
-这里只用UIImageView+WebCache来举个例子，其他的扩展类似。
+这里只用`UIImageView+WebCache`来举个例子，其他的扩展类似。
 
 **使用场景：已知图片的url地址，下载图片并设置到UIImageView上。**  
 
@@ -88,7 +88,7 @@ tags:
 
 ```  
 
-新版本还给UIView增加了分类，即UIView+WebCache，最终上述方法会走到下面的方法去具体操作，比如下载图片等。  
+新版本还给UIView增加了分类，即`UIView+WebCache`，最终上述方法会走到下面的方法去具体操作，比如下载图片等。  
 
 ```  
 
@@ -117,7 +117,7 @@ NSString *validOperationKey = operationKey ?: NSStringFromClass([self class]);
 
 ```
 
-上述方法定义在UIView+WebCacheOperation类中  
+上述方法定义在`UIView+WebCacheOperation`类中  
 
 ```
 - (void)sd_setImageLoadOperation:(nullable id<SDWebImageOperation>)operation forKey:(nullable NSString *)key {
@@ -155,7 +155,7 @@ NSString *validOperationKey = operationKey ?: NSStringFromClass([self class]);
 }
 ```
 
-实际上，所有的操作都是由一个实际上，所有的操作都是由一个operationDictionary字典维护的,执行新的操作之前，cancel所有的operation。
+实际上，所有的操作都是由一个实际上，所有的操作都是由一个`operationDictionary`字典维护的,执行新的操作之前，`cancel`所有的`operation`。
 
 * 第二步:占位图策略  
    作为图片下载完成之前的替代图片。dispatch_main_async_safe是一个宏，保证在主线程安全执行.  
@@ -190,7 +190,7 @@ if (url) {
 ```  
 
 * 第四步 下载图片操作
-下载图片的操作是由SDWebImageManager完成的，它是一个单例  
+下载图片的操作是由`SDWebImageManager`完成的，它是一个单例  
 
 ```
 - (id <SDWebImageOperation>)loadImageWithURL:(nullable NSURL *)url
@@ -233,16 +233,16 @@ dispatch_main_async_safe(^{
 });
 ```  
 
-最后，把返回的id operation添加到operationDictionary中，方便后续的cancel。
+最后，把返回的`id operation`添加到`operationDictionary`中，方便后续的cancel。
 
 ```
 // 将生成的加载操作赋值给UIView的自定义属性
         [self sd_setImageLoadOperation:operation forKey:validOperationKey];
 ```
 
-###  2. SDWebImageManager  
+####  2. SDWebImageManager  
 
-**在UIImageView+WebCache背后，用于处理异步下载和图片缓存的类，当然你也可以直接使用 SDWebImageManager 的方法 来直接下载图片  **
+**在`UIImageView+WebCache`背后，用于处理异步下载和图片缓存的类，当然你也可以直接使用 `SDWebImageManager` 的方法 来直接下载图片  **
 
 ```
 - (nullable id <SDWebImageOperation>)loadImageWithURL:(nullable NSURL *)url
@@ -251,7 +251,7 @@ dispatch_main_async_safe(^{
                                             completed:(nullable SDInternalCompletionBlock)completedBlock;
 ```
 
-SDWebImageManager.h首先定义了一些枚举类型的SDWebImageOptions。  
+`SDWebImageManager.h`首先定义了一些枚举类型的SDWebImageOptions。  
 然后，声明了四个block：  
 
 ```
@@ -267,7 +267,7 @@ typedef NSString *(^SDWebImageCacheKeyFilterBlock)(NSURL *url);
 typedef NSData * _Nullable(^SDWebImageCacheSerializerBlock)(UIImage * _Nonnull image, NSData * _Nullable data, NSURL * _Nullable imageURL);
 ```
 
-定义了SDWebImageManagerDelegate协议：  
+定义了`SDWebImageManagerDelegate`协议：  
 
 ```
 @protocol SDWebImageManagerDelegate 
@@ -282,7 +282,7 @@ typedef NSData * _Nullable(^SDWebImageCacheSerializerBlock)(UIImage * _Nonnull i
 @end
 ```
 
-SDWebImageManager是单例使用的，分别维护了一个SDImageCache实例和一个SDWebImageDownloader实例。 对象方法分别是：  
+`SDWebImageManager`是单例使用的，分别维护了一个`SDImageCache`实例和一个`SDWebImageDownloader`实例。 对象方法分别是：  
 
 ```
 //初始化SDWebImageManager单例，在init方法中已经初始化了cache单例和downloader单例。
@@ -321,7 +321,7 @@ SDWebImageManager是单例使用的，分别维护了一个SDImageCache实例和
                                             completed:(nullable SDInternalCompletionBlock)completedBlock;
 ```
 
-#### 1. 首先，监测url 的合法性：  
+##### 1. 首先，监测url 的合法性：  
 
 ```
 if ([url isKindOfClass:NSString.class]) {
@@ -335,7 +335,7 @@ if (![url isKindOfClass:NSURL.class]) {
 
 第一个判断条件是防止很多用户直接传递NSString作为NSURL导致的错误，第二个判断条件防止crash。  
 
-#### 2.集合failedURLs保存之前失败的urls，如果url为空或者url之前失败过且不采用重试策略，直接调用completedBlock返回错误。  
+##### 2.集合failedURLs保存之前失败的urls，如果url为空或者url之前失败过且不采用重试策略，直接调用completedBlock返回错误。  
 
 ```
 BOOL isFailedUrl = NO;
@@ -351,7 +351,7 @@ if (url.absoluteString.length == 0 || (!(options & SDWebImageRetryFailed) && isF
 }
 ```  
 
-#### 3.保存操作  
+##### 3.保存操作  
 
 ```
 LOCK(self.runningOperationsLock);
@@ -361,7 +361,7 @@ UNLOCK(self.runningOperationsLock);
 
 runningOperations是一个可变数组，保存所有的operation，主要用来监测是否有operation在执行，即判断running 状态。  
 
-#### 4.查找缓存  
+##### 4.查找缓存  
 
 SDWebImageManager会首先在memory以及disk的cache中查找是否下载过相同的照片，即调用imageCache的下面方法  
 
@@ -379,13 +379,13 @@ if (!strongOperation || strongOperation.isCancelled) {  // operation取消,那�
 }
 ```  
 
-如果没有在缓存中找到图片，或者不管是否找到图片，只要operation有SDWebImageRefreshCached标记，那么若SDWebImageManagerDelegate的shouldDownloadImageForURL方法返回true，即允许下载时，都使用 imageDownloader 的下载方法
+如果没有在缓存中找到图片，或者不管是否找到图片，只要`operation`有`SDWebImageRefreshCached`标记，那么若`SDWebImageManagerDelegate`的`shouldDownloadImageForURL`方法返回true，即允许下载时，都使用 imageDownloader 的下载方法
 
 ```
 - (id )downloadImageWithURL:(NSURL *)url options:(SDWebImageDownloaderOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageDownloaderCompletedBlock)completedBlock
 ```  
 
-如果下载有错误，直接调用completedBlock返回错误，并且视情况将url添加到failedURLs里面；  
+如果下载有错误，直接调用`completedBlock`返回错误，并且视情况将url添加到failedURLs里面；  
 
 ```
 dispatch_main_sync_safe(^{
@@ -417,7 +417,7 @@ if ((options & SDWebImageRetryFailed)) {
 }
 ```  
 
-如果delegate实现了，imageManager:transformDownloadedImage:withURL:方法，图片在缓存之前，需要做转换（在全局队列中调用，不阻塞主线程）。转化成功切下载全部结束，图片存入缓存，调用completedBlock回调，第一个参数是转换后的image。
+如果delegate实现了，`imageManager:transformDownloadedImage:withURL:`方法，图片在缓存之前，需要做转换（在全局队列中调用，不阻塞主线程）。转化成功切下载全部结束，图片存入缓存，调用completedBlock回调，第一个参数是转换后的image。
 
 ```
 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -436,7 +436,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
 });
 ```  
 
-否则，直接存入缓存，调用completedBlock回调，第一个参数是下载的原始image。  
+否则，直接存入缓存，调用`completedBlock`回调，第一个参数是下载的原始image。  
 
 ```
 if (downloadedImage && finished) {
@@ -467,7 +467,7 @@ dispatch_main_sync_safe(^{
 });
 ```  
 
-最后都要将这个operation从runningOperations里删除。
+最后都要将这个`operation从runningOperations`里删除。
 
 ```
 @synchronized (self.runningOperations) {
@@ -475,7 +475,7 @@ dispatch_main_sync_safe(^{
  }
 ```
 
-###  3. SDWebImageCombinedOperation   
+####  3. SDWebImageCombinedOperation   
 
 ```
 @interface SDWebImageCombinedOperation : NSObject 
@@ -499,9 +499,9 @@ dispatch_main_sync_safe(^{
 
 在里面封装一个NSOperation，这么做的目的应该是为了使代码更简洁。因为下载操作需要查询缓存的operation和实际下载的operation，这个类的cancel方法可以同时cancel两个operation，同时还可以维护一个状态cancelled。
 
-## 四、SDWebImage 使用  
+### 四、SDWebImage 使用  
 
-1.使用IImageView+WebCache category来加载UITableView中cell的图片  
+1.使用`IImageView+WebCache` category来加载UITableView中cell的图片  
 
 ```
 [imageView sd_setImageWithURL:[NSURL URLWithString:@"http://img1.cache.netease.com/catchpic/5/51/5132C377F99EEEE927697E62C26DDFB1.jpg"] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
@@ -515,7 +515,7 @@ dispatch_main_sync_safe(^{
  }];
 ```  
 
-3.使用SDWebImageManager,SDWebImageManager为UIImageView+WebCache category的实现提供接口。  
+3.使用`SDWebImageManager`,`SDWebImageManager`为`UIImageView+WebCache` category的实现提供接口。  
 
 ```
 SDWebImageManager *manager = [SDWebImageManager sharedManager] ;
@@ -528,7 +528,7 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager] ;
  }];
 ```  
 
-4.加载图片还有使用SDWebImageDownloader和SDImageCache方式  
+4.加载图片还有使用`SDWebImageDownloader`和`SDImageCache`方式  
 
 5.key的来源 
 
@@ -546,13 +546,13 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager] ;
 }
 ```
 
-## 五、SDWebImage 流程  
+### 五、SDWebImage 流程  
 
 ![](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/iOS_tupian/429AC748-CDD6-4962-B3E6-47F85C8239B7.png?raw=true)  
   
 
 
-## 六、SDWebImage 解析  
+### 六、SDWebImage 解析  
 
 1. 入口 setImageWithURL:placeholderImage:options: 会先把 placeholderImage 显示，然后 SDWebImageManager 根据 URL 开始处理图片。
 
