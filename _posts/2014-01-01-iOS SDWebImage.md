@@ -54,6 +54,53 @@ tags:
 * `UIImageView+WebCache`和`UIButton+WebCache`直接为表层的 UIKit框架提供接口  
 * `SDWebImageManger`负责处理和协调`SDWebImageDownloader`和`SDWebImageCache`, 并与 `UIKit`层进行交互。  
 * `SDWebImageDownloaderOperation`真正执行下载请求；最底层的两个类为高层抽象提供支持。  
+
+## 三、SDWebImage 使用  
+
+1.使用IImageView+WebCache category来加载UITableView中cell的图片  
+
+```
+[imageView sd_setImageWithURL:[NSURL URLWithString:@"http://img1.cache.netease.com/catchpic/5/51/5132C377F99EEEE927697E62C26DDFB1.jpg"] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+```  
+
+2.使用Blocks,采用这个方案可以在网络图片加载过程中得知图片的下载进度和图片加载成功与否  
+
+```
+[imageView sd_setImageWithURL:[NSURL URLWithString:@"http://img1.cache.netease.com/catchpic/5/51/5132C377F99EEEE927697E62C26DDFB1.jpg"] placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+    //... completion code here ... 
+ }];
+```  
+
+3.使用SDWebImageManager,SDWebImageManager为UIImageView+WebCache category的实现提供接口。  
+
+```
+SDWebImageManager *manager = [SDWebImageManager sharedManager] ;
+[manager downloadImageWithURL:imageURL options:0 progress:^(NSInteger   receivedSize, NSInteger expectedSize) { 
+      // progression tracking code
+ }  completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType,   BOOL finished, NSURL *imageURL) { 
+   if (image) { 
+    // do something with image
+   }
+ }];
+```  
+
+4.加载图片还有使用SDWebImageDownloader和SDImageCache方式
+5.key的来源 
+
+```
+// 利用Image的URL生成一个缓存时需要的key.
+// 这里有两种情况,第一种是如果检测到cacheKeyFilter不为空时,利用cacheKeyFilter来处理URL生成一个key.
+// 如果为空,那么直接返回URL的string内容,当做key.
+- (NSString *)cacheKeyForURL:(NSURL *)url {
+    if (self.cacheKeyFilter) {
+        return self.cacheKeyFilter(url);
+    }
+    else {
+        return [url absoluteString];
+    }
+}
+```
+
 ## 三、SDWebImage 流程  
 
 ![](https://github.com/xiatianwulei/xiatianwulei.github.io/blob/master/img/media/iOS_tupian/429AC748-CDD6-4962-B3E6-47F85C8239B7.png?raw=true)  
