@@ -7,7 +7,7 @@ author:     夏天无泪
 header-img: img/post-bg-github-cup.jpg
 catalog: true
 tags:
-    - 算法
+    - 知识储备
 ---
 
 # 快速排序 (Quicksort)
@@ -359,11 +359,7 @@ print(list)
 [2, 5, 8, 10, 10, 13, 32]
 ```
 
-### [完整代码 >>](https://github.com/Lebron1992/swift-algorithm-demo/blob/master/swift-algorithm/Sort/Quicksort.swift)
 
-### 参考资料
-
-> [Data Structures and Algorithms in Swift](https://store.raywenderlich.com/products/data-structures-and-algorithms-in-swift) --- [raywenderlich.com](https://www.raywenderlich.com/)，如果想看原版书籍，请点击链接购买。
 
 
 
