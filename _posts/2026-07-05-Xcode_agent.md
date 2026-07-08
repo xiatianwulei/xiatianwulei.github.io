@@ -80,7 +80,7 @@ Xcode 27 的核心变化：从"代码编辑器 + AI 辅助工具"升级为"Agent
 
 ##### ② 云端引擎（Cloud Model）
 
-通过 Apple 的 **Private Cloud Compute** 基础设施运行，路由到 Claude、Gemini、OpenAI 等顶尖模型：
+通过 Chat Provider 或 ACP Agent 接入云端 AI 模型（如 ChatGPT、Claude、Gemini 等），完成复杂推理与大规模代码理解。：
 
 | 特性 | 说明 |
 |------|------|
@@ -537,14 +537,17 @@ Xcode 27 不只是 LanguageModel 和 ACP Agent，而是把 AI 推进到**"开发
 
 ---
 
-### 建议行动
+### 未来开发者的四个变化
 
-1. **尽快升级到 Apple Silicon Mac**，Xcode 27 已不再支持 Intel
-2. **尝试 Agentic Coding**，从简单任务开始（如"添加设置页面"、"修复这个 Bug"）
-3. **学习 ACP/MCP 协议**，理解智能体与工具链的交互机制
-4. **探索 Skills 体系**，将团队的编码规范、测试标准沉淀为可复用技能
-5. **善用 FoundationModels Instrument**，监控 AI 功能的性能和成本
-6. **关注插件生态**，GitHub、Figma 等已率先集成，后续会有更多工具接入
+① AI 从 Chat 进入 Agent 时代
+
+② Coding 从"写代码"变成"管理任务"
+
+③ Xcode 正在成为 AI 原生 IDE
+
+④ 越早开始使用 Agent，越早建立新的开发习惯
+
+
 
 ### 参考资料
 
