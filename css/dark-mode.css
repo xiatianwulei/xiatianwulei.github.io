@@ -24,11 +24,11 @@
   position: fixed;
   top: 0;
   left: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #0085a1, #4fc3f7);
+  height: 2px;
+  background: linear-gradient(90deg, rgba(0,133,161,0.6), #4fc3f7);
   z-index: 10000;
   width: 0;
-  transition: width 0.1s linear;
+  box-shadow: 0 0 6px rgba(79,195,247,0.5);
 }
 
 /* ---- Back to Top ---- */
