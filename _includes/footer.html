@@ -311,10 +311,17 @@ document.addEventListener('DOMContentLoaded', function() {
     Flake.prototype.draw = function() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.fillStyle = isDark
-            ? 'rgba(200, 210, 240, ' + (this.opacity * 0.7) + ')'
-            : 'rgba(255, 255, 255, ' + this.opacity + ')';
+        if (isDark) {
+            ctx.fillStyle = 'rgba(200, 210, 240, ' + (this.opacity * 0.7) + ')';
+            ctx.shadowColor = 'rgba(180, 200, 255, 0.5)';
+        } else {
+            // 亮色模式：浅蓝灰，带微光，在白底上也清晰可见
+            ctx.fillStyle = 'rgba(130, 160, 210, ' + (this.opacity * 0.8) + ')';
+            ctx.shadowColor = 'rgba(100, 130, 180, 0.4)';
+        }
+        ctx.shadowBlur = this.r * 2;
         ctx.fill();
+        ctx.shadowBlur = 0;
     };
 
     function initFlakes() {
