@@ -105,6 +105,7 @@ layout: default
                     admin: ['{{site.gitalk.admin}}'],
                     distractionFreeMode: {{site.gitalk.distractionFreeMode}},
                     id: md5(location.pathname),
+                    proxy: 'https://gitalk-proxy.vercel.app/api/access_token'
                     });
                     gitalk.render('gitalk-container');
                 </script>
