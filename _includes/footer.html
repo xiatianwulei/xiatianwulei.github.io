@@ -123,14 +123,21 @@
 <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // 从 localStorage 恢复之前的播放状态
+    var saved = {
+        currentTime: localStorage.getItem('musicCurrentTime') ? parseFloat(localStorage.getItem('musicCurrentTime')) : 0,
+        wasPlaying: localStorage.getItem('musicPlaying'),
+        volume: localStorage.getItem('musicVolume') ? parseFloat(localStorage.getItem('musicVolume')) : 0.5
+    };
+
     var ap = new APlayer({
         container: document.getElementById('aplayer'),
         mini: false,
-        autoplay: true,
+        autoplay: false,
         loop: 'all',
         preload: 'auto',
-        volume: 0.5,
-        mutex: true,
+        volume: saved.volume,
+        mutex: false,
         listFolded: false,
         audio: [{
             name: '我正年少',
@@ -139,6 +146,66 @@ document.addEventListener('DOMContentLoaded', function() {
             cover: '{{ "/img/avatar.png" | prepend: site.baseurl }}'
         }]
     });
+
+    function saveState() {
+        localStorage.setItem('musicCurrentTime', ap.audio.currentTime);
+        localStorage.setItem('musicPlaying', ap.audio.paused ? 'false' : 'true');
+        localStorage.setItem('musicVolume', ap.volume());
+    }
+
+    function tryPlay() {
+        var p = ap.play();
+        if (p && p.then) {
+            p.catch(function() {});
+        }
+    }
+
+    // 判断是否需要自动播放（首次访问 或 之前正在播放 = 都是 true）
+    var shouldPlay = saved.wasPlaying !== 'false';
+
+    if (shouldPlay) {
+        // 试试自动播放（可能被浏览器拦截）
+        ap.on('canplay', function() {
+            if (saved.currentTime > 0) {
+                ap.seek(saved.currentTime);
+            }
+            tryPlay();
+        });
+
+        // 兜底：浏览器拦截自动播放时，首次用户交互后开始播放
+        function playOnInteraction() {
+            if (ap.audio.paused) {
+                if (saved.currentTime > 0) ap.seek(saved.currentTime);
+                tryPlay();
+            }
+            ['click', 'touchstart', 'keydown'].forEach(function(e) {
+                document.removeEventListener(e, playOnInteraction);
+            });
+        }
+        ['click', 'touchstart', 'keydown'].forEach(function(e) {
+            document.addEventListener(e, playOnInteraction);
+        });
+    }
+
+    // 播放/暂停时记录状态
+    ap.on('play', function() {
+        localStorage.setItem('musicPlaying', 'true');
+    });
+    ap.on('pause', function() {
+        localStorage.setItem('musicPlaying', 'false');
+        saveState();
+    });
+
+    // 每秒保存播放位置
+    setInterval(function() {
+        if (!ap.audio.paused) {
+            localStorage.setItem('musicCurrentTime', ap.audio.currentTime);
+            localStorage.setItem('musicVolume', ap.volume());
+        }
+    }, 1000);
+
+    // 页面离开前保存
+    window.addEventListener('beforeunload', saveState);
 });
 </script>
 
