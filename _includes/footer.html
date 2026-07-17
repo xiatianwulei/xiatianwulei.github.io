@@ -105,8 +105,34 @@
     </div>
 </footer>
 
+<!-- APlayer 音乐播放器 -->
+<div id="aplayer"></div>
+
 <!-- jQuery -->
 <script src="{{ "/js/jquery.min.js " | prepend: site.baseurl }}"></script>
+
+<!-- APlayer JS -->
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var ap = new APlayer({
+        container: document.getElementById('aplayer'),
+        mini: false,
+        autoplay: false,
+        loop: 'all',
+        preload: 'auto',
+        volume: 0.5,
+        mutex: true,
+        listFolded: false,
+        audio: [{
+            name: '我正年少',
+            artist: '庄众',
+            url: '{{ "/music/我正年少 - 庄众.mp3" | prepend: site.baseurl }}',
+            cover: '{{ "/img/avatar.png" | prepend: site.baseurl }}'
+        }]
+    });
+});
+</script>
 
 <!-- Bootstrap Core JavaScript -->
 <script src="{{ "/js/bootstrap.min.js " | prepend: site.baseurl }}"></script>
@@ -461,4 +487,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 </script>
 {% endif %}
+
+<!-- Page Fade-in Transition -->
+<script>
+(function(){
+    if (document.readyState === 'complete') {
+        document.body.style.opacity = '1';
+    } else {
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '1';
+        });
+    }
+})();
+</script>
 
