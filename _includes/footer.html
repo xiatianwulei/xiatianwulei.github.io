@@ -271,8 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<!-- Snowfall Effect - 仅主页 -->
-{% if page.path == "index.html" %}
+<!-- Snowfall Effect - 全站 -->
 <canvas id="snow-canvas"></canvas>
 <script>
 (function() {
@@ -356,7 +355,6 @@ document.addEventListener('DOMContentLoaded', function() {
     snowObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 })();
 </script>
-{% endif %}
 
 <!-- Cursor Glow Effect -->
 <div id="cursor-glow"></div>
@@ -364,28 +362,33 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     var glow = document.getElementById('cursor-glow');
     if (!glow) return;
-    var mx = 0, my = 0, cx = 0, cy = 0;
-    var active = false;
+    var mx = 0, my = 0, cx = -100, cy = -100;
+    var active = false, raf = null;
 
     document.addEventListener('mousemove', function(e) {
         mx = e.clientX;
         my = e.clientY;
         if (!active) {
             active = true;
+            cx = mx; cy = my;
             glow.style.opacity = '1';
-            loop();
+            raf = requestAnimationFrame(loop);
         }
     });
 
     document.addEventListener('mouseleave', function() {
         active = false;
         glow.style.opacity = '0';
+        if (raf) { cancelAnimationFrame(raf); raf = null; }
     });
 
     document.addEventListener('mouseenter', function() {
-        active = true;
-        glow.style.opacity = '1';
-        loop();
+        if (!active) {
+            active = true;
+            cx = mx; cy = my;
+            glow.style.opacity = '1';
+            raf = requestAnimationFrame(loop);
+        }
     });
 
     function loop() {
@@ -394,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function() {
         cy += (my - cy) * 0.12;
         glow.style.left = cx + 'px';
         glow.style.top = cy + 'px';
-        requestAnimationFrame(loop);
+        raf = requestAnimationFrame(loop);
     }
 })();
 </script>
