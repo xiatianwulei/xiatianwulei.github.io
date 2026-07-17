@@ -4,7 +4,6 @@ title:      SwiftUI的 View 如何布局
 subtitle:   
 date:       2021-04-20
 author:     夏天无泪
-header-img: img/post-bg-digital-native.jpg?raw=true
 catalog: true
 tags:
     - SwiftUI

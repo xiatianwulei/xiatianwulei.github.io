@@ -3,7 +3,9 @@ layout: default
 ---
 
 <!-- Page Header -->
-<header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
+{% assign post_covers = site.static_files | where_exp: "f", "f.path contains 'img/post-bg-'" %}
+{% assign random_cover = post_covers | sample %}
+<header class="intro-header" style="background-image: url('{% if page.header-img %}{{ site.baseurl }}/{{ page.header-img }}{% else %}{{ site.baseurl }}{{ random_cover.path | default: site.header-img }}{% endif %}')">
     <div class="header-mask"></div>
     <div class="container">
         <div class="row">
@@ -103,11 +105,11 @@ layout: default
                 <section class="visible-md visible-lg">
                     <hr><h5><a href="{{'/about/' | prepend: site.baseurl }}">ABOUT ME</a></h5>
                     <div class="short-about">
-                        {% if site.sidebar-avatar %}
-                            <a href="{{ site.baseurl }}/about">
-                                <img src="{{site.sidebar-avatar}}"/>
-                            </a>
-                        {% endif %}
+                    {% if site.sidebar-avatar %}
+                        <a href="{{ site.baseurl }}/about" class="sidebar-avatar-link">
+                            <img src="{{site.sidebar-avatar}}"/>
+                        </a>
+                    {% endif %}
                         {% if site.sidebar-about-description %}
                             <p>{{site.sidebar-about-description}}</p>
                         {% endif %}

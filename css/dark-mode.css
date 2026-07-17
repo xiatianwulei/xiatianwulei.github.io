@@ -128,83 +128,33 @@ pre:hover .code-copy-btn,
 }
 
 
-/* ---- APlayer 播放器定位 ---- */
-#aplayer {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  z-index: 9998;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  transition: box-shadow 0.3s ease;
+/* ---- About Me Avatar Mask ---- */
+.sidebar-container .short-about .sidebar-avatar-link {
+  position: relative;
+  display: block;
+  width: 80%;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 20px;
 }
-#aplayer:hover {
-  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.25);
+.sidebar-container .short-about .sidebar-avatar-link img {
+  width: 100%;
+  display: block;
+  border-radius: 0;
+  margin-bottom: 0;
 }
-#aplayer .aplayer-list {
-  max-height: 200px;
+.sidebar-container .short-about .sidebar-avatar-link::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: transparent;
+  transition: background 0.3s ease;
+  pointer-events: none;
+  border-radius: 5px;
 }
-
-/* ---- APlayer 暗黑模式 ---- */
-[data-theme="dark"] #aplayer {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+[data-theme="dark"] .sidebar-container .short-about .sidebar-avatar-link::after {
+  background: rgba(0, 0, 0, 0.45);
 }
-[data-theme="dark"] #aplayer:hover {
-  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.65);
-}
-[data-theme="dark"] .aplayer {
-  background: #1e1e36;
-  color: #d0d0d0;
-}
-[data-theme="dark"] .aplayer .aplayer-info .aplayer-music {
-  color: #e0e0e0;
-}
-[data-theme="dark"] .aplayer .aplayer-info .aplayer-music .aplayer-title {
-  color: #f0f0f0;
-}
-[data-theme="dark"] .aplayer .aplayer-info .aplayer-music .aplayer-author {
-  color: #999;
-}
-[data-theme="dark"] .aplayer .aplayer-list ol li {
-  border-top-color: #2d2d3d;
-}
-[data-theme="dark"] .aplayer .aplayer-list ol li:hover {
-  background: #252540;
-}
-[data-theme="dark"] .aplayer .aplayer-list ol li.aplayer-list-light {
-  background: #2a2a42;
-}
-[data-theme="dark"] .aplayer .aplayer-list ol li .aplayer-list-index,
-[data-theme="dark"] .aplayer .aplayer-list ol li .aplayer-list-author {
-  color: #888;
-}
-[data-theme="dark"] .aplayer .aplayer-lrc::before {
-  background: linear-gradient(to bottom, #1e1e36 0%, rgba(30, 30, 54, 0.9) 20%, rgba(30, 30, 54, 0) 90%, rgba(30, 30, 54, 0) 100%);
-}
-[data-theme="dark"] .aplayer .aplayer-lrc::after {
-  background: linear-gradient(to top, #1e1e36 0%, rgba(30, 30, 54, 0.9) 20%, rgba(30, 30, 54, 0) 90%, rgba(30, 30, 54, 0) 100%);
-}
-[data-theme="dark"] .aplayer .aplayer-lrc p {
-  color: #aaa;
-}
-[data-theme="dark"] .aplayer .aplayer-lrc p.aplayer-lrc-current {
-  color: #4fc3f7;
-}
-[data-theme="dark"] .aplayer .aplayer-miniswitcher {
-  background: #3d3d5d;
-}
-[data-theme="dark"] .aplayer .aplayer-miniswitcher .aplayer-icon path {
-  fill: #d0d0d0;
-}
-
-/* 移动端适配 */
-@media (max-width: 768px) {
-  #aplayer {
-    bottom: 10px;
-    left: 10px;
-  }
-}
-
 /* ---- Snow Canvas ---- */
 #snow-canvas {
   position: fixed;

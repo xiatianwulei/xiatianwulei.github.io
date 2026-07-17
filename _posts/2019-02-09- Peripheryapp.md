@@ -4,7 +4,6 @@ title:      Peripheryapp 进阶
 subtitle:   
 date:       2019-02-09
 author:     夏天无泪
-header-img: img/post-bg-ios9-web.jpg
 catalog: true
 tags:
    - 知识扩展

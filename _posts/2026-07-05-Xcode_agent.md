@@ -4,7 +4,6 @@ title:      Swift Xcode 27
 subtitle:   
 date:       2026-07-05
 author:     夏天无泪
-header-img: img/post-bg-digital-native.jpg?raw=true
 catalog: true
 tags:
     - 学习记录

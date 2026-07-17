@@ -4,7 +4,6 @@ title:      二叉树 (Binary Tree)
 subtitle:   
 date:       2021-02-06
 author:     夏天无泪
-header-img: img/post-bg-github-cup.jpg
 catalog: true
 tags:
     - 知识储备

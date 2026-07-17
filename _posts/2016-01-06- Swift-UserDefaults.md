@@ -4,7 +4,6 @@ title:      UserDefaults 使用
 subtitle:   
 date:       2018-01-06
 author:     夏天无泪
-header-img: img/post-bg-coffee.jpg
 catalog: true
 tags:
     - Swift

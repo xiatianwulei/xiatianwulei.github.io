@@ -4,7 +4,6 @@ title:      StringExt
 subtitle:   
 date:       2017-01-06
 author:     夏天无泪
-header-img: img/post-bg-iWatch.jpg
 catalog: true
 tags:
     - SwiftExt

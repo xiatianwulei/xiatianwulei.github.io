@@ -4,7 +4,6 @@ title:      归并排序 (Merge Sort)
 subtitle:   
 date:       2021-02-13
 author:     夏天无泪
-header-img: img/post-bg-github-cup.jpg
 catalog: true
 tags:
     - 知识储备
