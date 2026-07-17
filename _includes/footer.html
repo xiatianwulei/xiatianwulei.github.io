@@ -105,6 +105,14 @@
     </div>
 </footer>
 
+<!-- Reading Progress Bar -->
+<div id="progress-bar"></div>
+
+<!-- Back to Top -->
+<button id="back-to-top" title="回到顶部">
+    <i class="fa fa-arrow-up"></i>
+</button>
+
 <!-- APlayer 音乐播放器 -->
 <div id="aplayer"></div>
 
@@ -420,6 +428,59 @@ document.addEventListener('DOMContentLoaded', function() {
         glow.style.top = cy + 'px';
         raf = requestAnimationFrame(loop);
     }
+})();
+</script>
+
+<!-- Reading Progress Bar -->
+<script>
+(function() {
+    var bar = document.getElementById('progress-bar');
+    if (!bar) return;
+    window.addEventListener('scroll', function() {
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        var progress = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
+        bar.style.width = progress + '%';
+    });
+})();
+</script>
+
+<!-- Back to Top -->
+<script>
+(function() {
+    var btn = document.getElementById('back-to-top');
+    if (!btn) return;
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 400) {
+            btn.classList.add('show');
+        } else {
+            btn.classList.remove('show');
+        }
+    });
+    btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+})();
+</script>
+
+<!-- Reading Time Estimate -->
+<script>
+(function() {
+    var previews = document.querySelectorAll('.post-preview');
+    previews.forEach(function(p) {
+        var contentEl = p.querySelector('.post-content-preview');
+        if (!contentEl) return;
+        var text = contentEl.textContent || '';
+        // 中文阅读速度约 400字/分钟，英文约 200词/分钟
+        var charCount = text.replace(/\s/g, '').length;
+        var minutes = Math.max(1, Math.ceil(charCount / 400));
+        var meta = p.querySelector('.post-meta');
+        if (!meta) return;
+        var span = document.createElement('span');
+        span.className = 'reading-time';
+        span.textContent = '约 ' + minutes + ' 分钟';
+        meta.appendChild(span);
+    });
 })();
 </script>
 
