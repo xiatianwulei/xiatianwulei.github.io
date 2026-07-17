@@ -358,6 +358,47 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 {% endif %}
 
+<!-- Cursor Glow Effect -->
+<div id="cursor-glow"></div>
+<script>
+(function() {
+    var glow = document.getElementById('cursor-glow');
+    if (!glow) return;
+    var mx = 0, my = 0, cx = 0, cy = 0;
+    var active = false;
+
+    document.addEventListener('mousemove', function(e) {
+        mx = e.clientX;
+        my = e.clientY;
+        if (!active) {
+            active = true;
+            glow.style.opacity = '1';
+            loop();
+        }
+    });
+
+    document.addEventListener('mouseleave', function() {
+        active = false;
+        glow.style.opacity = '0';
+    });
+
+    document.addEventListener('mouseenter', function() {
+        active = true;
+        glow.style.opacity = '1';
+        loop();
+    });
+
+    function loop() {
+        if (!active) return;
+        cx += (mx - cx) * 0.12;
+        cy += (my - cy) * 0.12;
+        glow.style.left = cx + 'px';
+        glow.style.top = cy + 'px';
+        requestAnimationFrame(loop);
+    }
+})();
+</script>
+
 {% if site.ba_track_id %}
 <script>
     // dynamic User by Hux

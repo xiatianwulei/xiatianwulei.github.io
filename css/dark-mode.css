@@ -30,6 +30,22 @@
   pointer-events: none;
 }
 
+/* ---- Cursor Glow ---- */
+#cursor-glow {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(130, 160, 220, 0.25) 0%, rgba(130, 160, 220, 0.06) 50%, transparent 70%);
+  will-change: left, top;
+}
+[data-theme="dark"] #cursor-glow {
+  background: radial-gradient(circle, rgba(180, 200, 255, 0.2) 0%, rgba(150, 170, 230, 0.05) 50%, transparent 70%);
+}
+
 [data-theme="dark"] {
   /* ---- Body & Base ---- */
   body {

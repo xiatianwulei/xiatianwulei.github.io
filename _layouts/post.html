@@ -21,6 +21,11 @@ layout: default
         background: rgba(0,0,0, {{ page.header-mask }});
     }
     {% endif %}
+
+    /* 暗黑模式：文章页 header 遮罩 */
+    [data-theme="dark"] header.intro-header .header-mask{
+        background: rgba(0, 0, 0, 0.55);
+    }
 </style>
 <header class="intro-header" >
     <div class="header-mask"></div>
