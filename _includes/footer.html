@@ -564,11 +564,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var shuffled = shuffle(covers);
     var previews = document.querySelectorAll('.post-preview');
     previews.forEach(function(p, i) {
-        var imgUrl = shuffled[i % shuffled.length];
-        var cover = document.createElement('div');
-        cover.className = 'post-cover-img';
-        cover.innerHTML = '<img src="' + imgUrl + '" alt="" loading="lazy">';
-        p.insertBefore(cover, p.firstChild);
+        p.style.backgroundImage = 'url(' + shuffled[i % shuffled.length] + ')';
     });
 })();
 </script>

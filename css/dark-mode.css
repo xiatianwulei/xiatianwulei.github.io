@@ -68,36 +68,31 @@
 
 /* ---- Post Card Enhancement ---- */
 .post-preview {
-  background: #fff;
+  background-color: #fff;
+  background-size: cover;
+  background-position: center;
   border-radius: 12px;
   padding: 24px 28px;
   margin-bottom: 20px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
+  position: relative;
 }
-.post-preview:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+.post-preview::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255,255,255,0.88);
+  border-radius: 12px;
+  z-index: 0;
+  transition: background 0.3s ease;
+}
+.post-preview > * {
+  position: relative;
+  z-index: 1;
 }
 .post-preview + hr {
   display: none;
-}
-
-/* ---- Post Cover Image ---- */
-.post-cover-img {
-  margin: -24px -28px 20px -28px;
-  height: 180px;
-  overflow: hidden;
-  border-radius: 12px 12px 0 0;
-}
-.post-cover-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-.post-preview:hover .post-cover-img img {
-  transform: scale(1.05);
 }
 
 /* ---- Code Block Copy Button ---- */
@@ -306,6 +301,9 @@ pre:hover .code-copy-btn,
   .post-preview > .post-meta > a:hover,
   .post-preview > .post-meta > a:focus {
     color: #4fc3f7;
+  }
+  .post-preview::before {
+    background: rgba(30, 30, 54, 0.85);
   }
   .post-content-preview {
     color: #888;
