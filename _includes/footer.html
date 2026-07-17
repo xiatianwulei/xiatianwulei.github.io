@@ -543,6 +543,63 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 </script>
 
+<!-- Post Card Random Cover Image -->
+<script>
+(function() {
+    var covers = [
+{% assign covers = site.static_files | where_exp: "f", "f.path contains 'img/post-bg-'" %}
+{% for f in covers %}
+        '{{ f.path }}',
+{% endfor %}
+    ];
+    if (covers.length === 0) return;
+    function shuffle(a) {
+        var arr = a.slice();
+        for (var i = arr.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+        }
+        return arr;
+    }
+    var shuffled = shuffle(covers);
+    var previews = document.querySelectorAll('.post-preview');
+    previews.forEach(function(p, i) {
+        var imgUrl = shuffled[i % shuffled.length];
+        var cover = document.createElement('div');
+        cover.className = 'post-cover-img';
+        cover.innerHTML = '<img src="' + imgUrl + '" alt="" loading="lazy">';
+        p.insertBefore(cover, p.firstChild);
+    });
+})();
+</script>
+
+<!-- Code Block Copy Button -->
+<script>
+(function() {
+    document.querySelectorAll('figure.highlight, .post-container pre:not(figure pre)').forEach(function(el) {
+        var pre = el.tagName === 'PRE' ? el : el.querySelector('pre');
+        if (!pre || el.querySelector('.code-copy-btn')) return;
+        if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+        var btn = document.createElement('button');
+        btn.className = 'code-copy-btn';
+        btn.textContent = 'Copy';
+        btn.addEventListener('click', function() {
+            navigator.clipboard.writeText(pre.textContent || pre.innerText).then(function() {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(function() {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 1500);
+            }).catch(function() {
+                btn.textContent = 'Failed';
+                setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
+            });
+        });
+        el.appendChild(btn);
+    });
+})();
+</script>
 
 {% if site.ba_track_id %}
 <script>

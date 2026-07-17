@@ -83,6 +83,55 @@
   display: none;
 }
 
+/* ---- Post Cover Image ---- */
+.post-cover-img {
+  margin: -24px -28px 20px -28px;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+}
+.post-cover-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.post-preview:hover .post-cover-img img {
+  transform: scale(1.05);
+}
+
+/* ---- Code Block Copy Button ---- */
+.code-copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #aaa;
+  background: rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, color 0.2s ease, background 0.2s ease;
+  z-index: 5;
+}
+pre, .highlight {
+  position: relative;
+}
+pre:hover .code-copy-btn,
+.highlight:hover .code-copy-btn {
+  opacity: 1;
+}
+.code-copy-btn:hover {
+  color: #333;
+  background: rgba(0,0,0,0.1);
+}
+.code-copy-btn.copied {
+  color: #4fc3f7;
+  background: rgba(79,195,247,0.12);
+}
+
 
 /* ---- APlayer 播放器定位 ---- */
 #aplayer {
@@ -273,6 +322,18 @@
   .post-preview:hover {
     box-shadow: 0 6px 24px rgba(0,0,0,0.55);
   }
+
+  /* ---- Code Copy Dark ---- */
+  .code-copy-btn {
+    color: #888;
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.1);
+  }
+  .code-copy-btn:hover {
+    color: #d0d0d0;
+    background: rgba(255,255,255,0.12);
+  }
+
   /* ---- Links ---- */
   a {
     color: #d0d0d0;
