@@ -203,6 +203,154 @@
 
 
 <!-- Baidu Tongji -->
+<!-- GLightbox JS -->
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
+<!-- Theme Toggle -->
+<script>
+(function() {
+    // 初始化主题：优先 localStorage，其次系统偏好
+    var savedTheme = localStorage.getItem('theme');
+    if (!savedTheme) {
+        savedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    var toggle = document.getElementById('theme-toggle');
+    var icon = toggle ? toggle.querySelector('i') : null;
+
+    function updateIcon(theme) {
+        if (icon) {
+            icon.className = theme === 'dark' ? 'fa fa-sun-o' : 'fa fa-moon-o';
+        }
+    }
+    updateIcon(savedTheme);
+
+    if (toggle) {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            var current = document.documentElement.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateIcon(next);
+        });
+    }
+
+    // 监听系统主题变化
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+        if (!localStorage.getItem('theme')) {
+            var sysTheme = e.matches ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', sysTheme);
+            updateIcon(sysTheme);
+        }
+    });
+})();
+</script>
+
+<!-- GLightbox Init -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof GLightbox !== 'undefined') {
+        var lightbox = GLightbox({
+            selector: '.post-container img:not(.no-lightbox)',
+            touchNavigation: true,
+            loop: false,
+            autoplayVideos: false
+        });
+
+        // 主题切换时同步更新 lightbox skin
+        var observer = new MutationObserver(function() {
+            var theme = document.documentElement.getAttribute('data-theme');
+            if (lightbox) {
+                lightbox.skin = theme === 'dark' ? 'clean' : 'clean';
+            }
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    }
+});
+</script>
+
+<!-- Snowfall Effect - 仅主页 -->
+{% if page.path == "index.html" %}
+<canvas id="snow-canvas"></canvas>
+<script>
+(function() {
+    var canvas = document.getElementById('snow-canvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+
+    var W, H;
+    var flakes = [];
+    var maxFlakes = 80;
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+    function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+    }
+
+    function Flake() {
+        this.reset();
+    }
+    Flake.prototype.reset = function() {
+        this.x = Math.random() * W;
+        this.y = Math.random() * -H;
+        this.r = Math.random() * 3 + 1;
+        this.speed = Math.random() * 1.5 + 0.5;
+        this.wind = Math.random() * 0.5 - 0.25;
+        this.opacity = Math.random() * 0.6 + 0.2;
+    };
+    Flake.prototype.update = function() {
+        this.y += this.speed;
+        this.x += this.wind;
+        if (this.y > H + 10) { this.y = -10; this.x = Math.random() * W; }
+        if (this.x > W + 10) this.x = -10;
+        if (this.x < -10) this.x = W + 10;
+    };
+    Flake.prototype.draw = function() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = isDark
+            ? 'rgba(200, 210, 240, ' + (this.opacity * 0.7) + ')'
+            : 'rgba(255, 255, 255, ' + this.opacity + ')';
+        ctx.fill();
+    };
+
+    function initFlakes() {
+        flakes = [];
+        for (var i = 0; i < maxFlakes; i++) {
+            var f = new Flake();
+            f.y = Math.random() * H;
+            flakes.push(f);
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, W, H);
+        for (var i = 0; i < flakes.length; i++) {
+            flakes[i].update();
+            flakes[i].draw();
+        }
+        requestAnimationFrame(animate);
+    }
+
+    resize();
+    initFlakes();
+    animate();
+    window.addEventListener('resize', function() {
+        resize();
+        initFlakes();
+    });
+
+    var snowObserver = new MutationObserver(function() {
+        isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    });
+    snowObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+})();
+</script>
+{% endif %}
+
 {% if site.ba_track_id %}
 <script>
     // dynamic User by Hux

@@ -112,4 +112,4 @@ friends: [
     }
 ]
 
-theme: jekyll-theme-cayman
+# theme: jekyll-theme-cayman  # 不需要外部主题，博客自带全套模板
