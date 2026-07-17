@@ -123,7 +123,6 @@
 <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // 从 localStorage 恢复之前的播放状态
     var saved = {
         currentTime: localStorage.getItem('musicCurrentTime') ? parseFloat(localStorage.getItem('musicCurrentTime')) : 0,
         wasPlaying: localStorage.getItem('musicPlaying'),
@@ -144,6 +143,11 @@ document.addEventListener('DOMContentLoaded', function() {
             artist: '久石让',
             url: '{{ "/music/Summer (菊次郎的夏天) - 久石让.mp3" | prepend: site.baseurl }}',
             cover: '{{ "/img/avatar.png" | prepend: site.baseurl }}'
+        }, {
+            name: '天空之城 (钢琴版)',
+            artist: '纯音乐',
+            url: '{{ "/music/天空之城 (钢琴版) - 纯音乐.mp3" | prepend: site.baseurl }}',
+            cover: '{{ "/img/avatar.png" | prepend: site.baseurl }}'
         }]
     });
 
@@ -155,39 +159,45 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function tryPlay() {
         var p = ap.play();
-        if (p && p.then) {
-            p.catch(function() {});
-        }
+        if (p && p.then) p.catch(function(){});
     }
 
-    // 判断是否需要自动播放（首次访问 或 之前正在播放 = 都是 true）
     var shouldPlay = saved.wasPlaying !== 'false';
 
     if (shouldPlay) {
-        // 试试自动播放（可能被浏览器拦截）
-        ap.on('canplay', function() {
+        var attempted = false;
+
+        function doResume() {
+            if (attempted) return;
+            attempted = true;
             if (saved.currentTime > 0) {
-                ap.seek(saved.currentTime);
+                try { ap.seek(saved.currentTime); } catch(e) {}
             }
             tryPlay();
-        });
-
-        // 兜底：浏览器拦截自动播放时，首次用户交互后开始播放
-        function playOnInteraction() {
-            if (ap.audio.paused) {
-                if (saved.currentTime > 0) ap.seek(saved.currentTime);
-                tryPlay();
-            }
-            ['click', 'touchstart', 'keydown'].forEach(function(e) {
-                document.removeEventListener(e, playOnInteraction);
-            });
         }
-        ['click', 'touchstart', 'keydown'].forEach(function(e) {
-            document.addEventListener(e, playOnInteraction);
-        });
+
+        // 策略1: canplay 事件
+        ap.on('canplay', doResume);
+
+        // 策略2: 延迟兜底（canplay 可能已经触发过了）
+        setTimeout(doResume, 300);
+
+        // 策略3: 如果以上都被浏览器拦截，等待用户首次交互后播放
+        setTimeout(function() {
+            if (ap.audio.paused) {
+                function playOnInteraction() {
+                    if (ap.audio.paused) doResume();
+                    ['click', 'touchstart', 'keydown'].forEach(function(e) {
+                        document.removeEventListener(e, playOnInteraction);
+                    });
+                }
+                ['click', 'touchstart', 'keydown'].forEach(function(e) {
+                    document.addEventListener(e, playOnInteraction);
+                });
+            }
+        }, 800);
     }
 
-    // 播放/暂停时记录状态
     ap.on('play', function() {
         localStorage.setItem('musicPlaying', 'true');
     });
@@ -196,7 +206,6 @@ document.addEventListener('DOMContentLoaded', function() {
         saveState();
     });
 
-    // 每秒保存播放位置
     setInterval(function() {
         if (!ap.audio.paused) {
             localStorage.setItem('musicCurrentTime', ap.audio.currentTime);
@@ -204,7 +213,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 1000);
 
-    // 页面离开前保存
     window.addEventListener('beforeunload', saveState);
 });
 </script>
