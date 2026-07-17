@@ -209,12 +209,7 @@
 <!-- Theme Toggle -->
 <script>
 (function() {
-    // 初始化主题：优先 localStorage，其次系统偏好
-    var savedTheme = localStorage.getItem('theme');
-    if (!savedTheme) {
-        savedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    document.documentElement.setAttribute('data-theme', savedTheme);
+    var savedTheme = document.documentElement.getAttribute('data-theme');
 
     var toggle = document.getElementById('theme-toggle');
     var icon = toggle ? toggle.querySelector('i') : null;
