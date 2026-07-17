@@ -61,8 +61,8 @@ kramdown:
 # Gitalk
 gitalk:
   enable: true    #是否开启Gitalk评论
-  clientID: 0v231iviX0W66oI71b45                            #生成的clientID
-  clientSecret: 8eedf3fae616e14d0658fcf601a472778b54d4d8    #生成的clientSecret
+  clientID: 0v23liLnnothUeG2SJ79                            #生成的clientID
+  clientSecret: 3a607c76e2917d0490017a2ce19d21a2674f5b3e    #生成的clientSecret
   repo: xiatianwulei.github.io    #仓库名称
   owner: xiatianwulei    #github用户名
   admin: xiatianwulei
