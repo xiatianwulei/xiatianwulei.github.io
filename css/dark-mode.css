@@ -82,15 +82,7 @@
 .post-preview + hr {
   display: none;
 }
-.reading-time {
-  display: inline-block;
-  font-size: 13px;
-  color: #aaa;
-  margin-left: 6px;
-}
-.reading-time::before {
-  content: "· ";
-}
+
 
 /* ---- APlayer 播放器定位 ---- */
 #aplayer {
@@ -281,10 +273,6 @@
   .post-preview:hover {
     box-shadow: 0 6px 24px rgba(0,0,0,0.55);
   }
-  .reading-time {
-    color: #777;
-  }
-
   /* ---- Links ---- */
   a {
     color: #d0d0d0;

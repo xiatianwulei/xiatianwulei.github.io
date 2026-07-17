@@ -543,26 +543,6 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 </script>
 
-<!-- Reading Time Estimate -->
-<script>
-(function() {
-    var previews = document.querySelectorAll('.post-preview');
-    previews.forEach(function(p) {
-        var contentEl = p.querySelector('.post-content-preview');
-        if (!contentEl) return;
-        var text = contentEl.textContent || '';
-        // 中文阅读速度约 400字/分钟，英文约 200词/分钟
-        var charCount = text.replace(/\s/g, '').length;
-        var minutes = Math.max(1, Math.ceil(charCount / 400));
-        var meta = p.querySelector('.post-meta');
-        if (!meta) return;
-        var span = document.createElement('span');
-        span.className = 'reading-time';
-        span.textContent = '约 ' + minutes + ' 分钟';
-        meta.appendChild(span);
-    });
-})();
-</script>
 
 {% if site.ba_track_id %}
 <script>
