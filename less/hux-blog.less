@@ -735,15 +735,15 @@ form .row:first-child .floating-label-form-group {
 // -- Highlight Color Customization
 
 ::-moz-selection {
-	color: white;
+	color: inherit;
 	text-shadow: none;
-	background: @brand-primary;
+	background: fade(@brand-primary, 25%);
 }
 
 ::selection {
-	color: white;
+	color: inherit;
 	text-shadow: none;
-	background: @brand-primary;
+	background: fade(@brand-primary, 25%);
 }
 
 img::selection {

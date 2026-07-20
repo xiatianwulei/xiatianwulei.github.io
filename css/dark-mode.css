@@ -2,6 +2,60 @@
    Dark Mode Styles for xiatianwulei Blog
    ========================================== */
 
+/* ---- Global: Prevent horizontal scroll on mobile ---- */
+html {
+  overflow-x: hidden;
+  width: 100%;
+}
+body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+/* Ensure container-fluid and nav don't overflow */
+.container-fluid {
+  overflow-x: hidden;
+}
+/* Fix navbar row that may overflow on mobile */
+.navbar-header {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+/* Fix potential overflow from snow canvas */
+#snow-canvas {
+  max-width: 100vw;
+}
+
+/* ---- Enhanced Selection Effect (Light Mode) ---- */
+::selection {
+  background: rgba(0, 133, 161, 0.25);
+  color: inherit;
+  text-shadow: none;
+}
+::-moz-selection {
+  background: rgba(0, 133, 161, 0.25);
+  color: inherit;
+  text-shadow: none;
+}
+img::selection {
+  background: transparent;
+}
+img::-moz-selection {
+  background: transparent;
+}
+
+/* ---- Mobile Tap Highlight ---- */
+a, button, .navbar-toggle, .tag, .post-preview {
+  -webkit-tap-highlight-color: rgba(0, 133, 161, 0.18);
+  -webkit-touch-callout: none;
+}
+/* Code blocks keep text selectable for copy */
+pre, code, .highlight {
+  -webkit-touch-callout: text;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 /* ---- Header Base Fix ---- */
 .intro-header {
   position: relative;
@@ -582,20 +636,32 @@ pre:hover .code-copy-btn,
     color: #3d3d4d;
   }
 
-  /* ---- Selection ---- */
+  /* ---- Selection (Enhanced) ---- */
   ::selection {
-    background: #4fc3f7;
-    color: #1a1a2e;
+    background: rgba(79, 195, 247, 0.35);
+    color: inherit;
+    text-shadow: none;
   }
   ::-moz-selection {
-    background: #4fc3f7;
-    color: #1a1a2e;
+    background: rgba(79, 195, 247, 0.35);
+    color: inherit;
+    text-shadow: none;
   }
   img::selection {
     background: transparent;
   }
   img::-moz-selection {
     background: transparent;
+  }
+
+  /* ---- Mobile Tap Highlight (Dark) ---- */
+  a, button, .navbar-toggle, .tag, .post-preview {
+    -webkit-tap-highlight-color: rgba(79, 195, 247, 0.2);
+  }
+  pre, code, .highlight {
+    -webkit-touch-callout: text;
+    -webkit-user-select: text;
+    user-select: text;
   }
 
   /* ---- Buttons ---- */
