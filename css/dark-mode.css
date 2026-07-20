@@ -49,10 +49,13 @@ pre {
 /* ---- Long text/URLs: break instead of overflowing ---- */
 .post-container,
 .post-content-preview,
-.post-preview {
+.post-preview,
+.postlist-container {
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .post-container a {
   overflow-wrap: break-word;
@@ -203,6 +206,21 @@ pre, code, .highlight {
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   position: relative;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.post-preview a {
+  max-width: 100%;
+  overflow: hidden;
+}
+.post-preview .post-title,
+.post-preview .post-subtitle,
+.post-preview .post-content-preview {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 .post-preview:hover {
   transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
