@@ -223,7 +223,7 @@ pre, code, .highlight {
   word-break: break-word;
 }
 .post-preview:hover {
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
+  transition: box-shadow 0.25s ease, background-color 0.3s ease;
 }
 .post-preview::before {
   content: '';
@@ -239,8 +239,8 @@ pre, code, .highlight {
   z-index: 1;
 }
 .post-preview:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  background-color: #f0f7fa;
+  box-shadow: 0 2px 16px rgba(0,133,161,0.12);
 }
 .post-preview + hr {
   display: none;
@@ -419,8 +419,8 @@ pre:hover .code-copy-btn,
     box-shadow: 0 2px 12px rgba(0,0,0,0.35);
   }
   .post-preview:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.55);
+    background-color: #2a2a45;
+    box-shadow: 0 2px 16px rgba(79,195,247,0.15);
   }
 
   /* ---- Code Copy Dark ---- */
