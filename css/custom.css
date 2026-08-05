@@ -151,134 +151,134 @@ html body .highlight .err {
  * ========================================================= */
 
 /* 标题：青色 #66cccc */
-html body[data-theme="dark"] h1,
-html body[data-theme="dark"] h2,
-html body[data-theme="dark"] h3,
-html body[data-theme="dark"] h4,
-html body[data-theme="dark"] h5,
-html body[data-theme="dark"] h6 {
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] h5,
+html[data-theme="dark"] h6 {
   color: #66cccc !important;
 }
 
 /* 链接：绿 #99cc99 */
-html body[data-theme="dark"] a {
+html[data-theme="dark"] a {
   color: #99cc99 !important;
 }
 
 /* 行内代码：灰 #999999 */
-html body[data-theme="dark"] code {
+html[data-theme="dark"] code {
   background-color: rgba(153, 153, 153, 0.12) !important;
   color: #999999 !important;
 }
 
 /* 代码块基础：深底 #1e1e2e（与博客暗色 body 协调），亮灰字 #cccccc */
-html body[data-theme="dark"] pre,
-html body[data-theme="dark"] pre[class*="language-"],
-html body[data-theme="dark"] .highlight,
-html body[data-theme="dark"] .highlight pre,
-html body[data-theme="dark"] .codehilite,
-html body[data-theme="dark"] .codehilite pre,
-html body[data-theme="dark"] figure.highlight,
-html body[data-theme="dark"] figure.highlight pre {
+html[data-theme="dark"] pre,
+html[data-theme="dark"] pre[class*="language-"],
+html[data-theme="dark"] .highlight,
+html[data-theme="dark"] .highlight pre,
+html[data-theme="dark"] .codehilite,
+html[data-theme="dark"] .codehilite pre,
+html[data-theme="dark"] figure.highlight,
+html[data-theme="dark"] figure.highlight pre {
   background-color: #1e1e2e !important;
   border: 1px solid #2d2d44 !important;
   color: #cccccc !important;
 }
 
-html body[data-theme="dark"] pre code,
-html body[data-theme="dark"] .highlight pre code,
-html body[data-theme="dark"] .codehilite pre code,
-html body[data-theme="dark"] figure.highlight code {
+html[data-theme="dark"] pre code,
+html[data-theme="dark"] .highlight pre code,
+html[data-theme="dark"] .codehilite pre code,
+html[data-theme="dark"] figure.highlight code {
   background-color: transparent !important;
   color: #cccccc !important;
 }
 
 /* 无语言代码块：灰 #999999 */
-html body[data-theme="dark"] pre > code:not([class]) {
+html[data-theme="dark"] pre > code:not([class]) {
   color: #999999 !important;
 }
 
 /* 引用块：红 #f2777a */
-html body[data-theme="dark"] blockquote {
+html[data-theme="dark"] blockquote {
   color: #f2777a !important;
   border-left-color: #66cccc !important;
 }
 
 /* ---------- Rouge token：暗色 ---------- */
 
-html body[data-theme="dark"] .highlight .c,
-html body[data-theme="dark"] .highlight .cm,
-html body[data-theme="dark"] .highlight .c1,
-html body[data-theme="dark"] .highlight .cp,
-html body[data-theme="dark"] .highlight .cs {
+html[data-theme="dark"] .highlight .c,
+html[data-theme="dark"] .highlight .cm,
+html[data-theme="dark"] .highlight .c1,
+html[data-theme="dark"] .highlight .cp,
+html[data-theme="dark"] .highlight .cs {
   color: #48be66 !important;                       /* 注释 */
 }
 
-html body[data-theme="dark"] .highlight .k,
-html body[data-theme="dark"] .highlight .kc,
-html body[data-theme="dark"] .highlight .kd,
-html body[data-theme="dark"] .highlight .kn,
-html body[data-theme="dark"] .highlight .kp,
-html body[data-theme="dark"] .highlight .kr,
-html body[data-theme="dark"] .highlight .kt {
+html[data-theme="dark"] .highlight .k,
+html[data-theme="dark"] .highlight .kc,
+html[data-theme="dark"] .highlight .kd,
+html[data-theme="dark"] .highlight .kn,
+html[data-theme="dark"] .highlight .kp,
+html[data-theme="dark"] .highlight .kr,
+html[data-theme="dark"] .highlight .kt {
   color: #c33795 !important;                       /* 关键字 */
 }
 
-html body[data-theme="dark"] .highlight .s,
-html body[data-theme="dark"] .highlight .sb,
-html body[data-theme="dark"] .highlight .sc,
-html body[data-theme="dark"] .highlight .sd,
-html body[data-theme="dark"] .highlight .s2,
-html body[data-theme="dark"] .highlight .sh,
-html body[data-theme="dark"] .highlight .si,
-html body[data-theme="dark"] .highlight .sx,
-html body[data-theme="dark"] .highlight .s1 {
+html[data-theme="dark"] .highlight .s,
+html[data-theme="dark"] .highlight .sb,
+html[data-theme="dark"] .highlight .sc,
+html[data-theme="dark"] .highlight .sd,
+html[data-theme="dark"] .highlight .s2,
+html[data-theme="dark"] .highlight .sh,
+html[data-theme="dark"] .highlight .si,
+html[data-theme="dark"] .highlight .sx,
+html[data-theme="dark"] .highlight .s1 {
   color: #e6424b !important;                       /* 字符串 */
 }
 
-html body[data-theme="dark"] .highlight .m,
-html body[data-theme="dark"] .highlight .mf,
-html body[data-theme="dark"] .highlight .mh,
-html body[data-theme="dark"] .highlight .mi,
-html body[data-theme="dark"] .highlight .mo,
-html body[data-theme="dark"] .highlight .il {
+html[data-theme="dark"] .highlight .m,
+html[data-theme="dark"] .highlight .mf,
+html[data-theme="dark"] .highlight .mh,
+html[data-theme="dark"] .highlight .mi,
+html[data-theme="dark"] .highlight .mo,
+html[data-theme="dark"] .highlight .il {
   color: #8b86c9 !important;                       /* 数字/字符 */
 }
 
-html body[data-theme="dark"] .highlight .nb,
-html body[data-theme="dark"] .highlight .no,
-html body[data-theme="dark"] .highlight .bp {
+html[data-theme="dark"] .highlight .nb,
+html[data-theme="dark"] .highlight .no,
+html[data-theme="dark"] .highlight .bp {
   color: #8b86c9 !important;                       /* 内置常量/null */
 }
 
-html body[data-theme="dark"] .highlight .nd {
+html[data-theme="dark"] .highlight .nd {
   color: #d38e63 !important;                       /* 注解/预处理 */
 }
 
-html body[data-theme="dark"] .highlight .na,
-html body[data-theme="dark"] .highlight .nt {
+html[data-theme="dark"] .highlight .na,
+html[data-theme="dark"] .highlight .nt {
   color: #67878e !important;                       /* 属性 */
 }
 
-html body[data-theme="dark"] .highlight .nc,
-html body[data-theme="dark"] .highlight .nf,
-html body[data-theme="dark"] .highlight .fm,
-html body[data-theme="dark"] .highlight .nn {
+html[data-theme="dark"] .highlight .nc,
+html[data-theme="dark"] .highlight .nf,
+html[data-theme="dark"] .highlight .fm,
+html[data-theme="dark"] .highlight .nn {
   color: #cccccc !important;                       /* 类名/函数名 */
 }
 
-html body[data-theme="dark"] .highlight .n,
-html body[data-theme="dark"] .highlight .nl,
-html body[data-theme="dark"] .highlight .nx,
-html body[data-theme="dark"] .highlight .py,
-html body[data-theme="dark"] .highlight .nv,
-html body[data-theme="dark"] .highlight .vc,
-html body[data-theme="dark"] .highlight .vg,
-html body[data-theme="dark"] .highlight .vi {
+html[data-theme="dark"] .highlight .n,
+html[data-theme="dark"] .highlight .nl,
+html[data-theme="dark"] .highlight .nx,
+html[data-theme="dark"] .highlight .py,
+html[data-theme="dark"] .highlight .nv,
+html[data-theme="dark"] .highlight .vc,
+html[data-theme="dark"] .highlight .vg,
+html[data-theme="dark"] .highlight .vi {
   color: #cccccc !important;                       /* 普通变量名 */
 }
 
-html body[data-theme="dark"] .highlight .o,
-html body[data-theme="dark"] .highlight .p {
+html[data-theme="dark"] .highlight .o,
+html[data-theme="dark"] .highlight .p {
   color: #cccccc !important;                       /* 运算符/标点 */
 }
