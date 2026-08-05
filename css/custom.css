@@ -1,0 +1,143 @@
+/* =========================================================
+ *  Yosemite 主题风格覆盖（配色取自 MWeb Pro 导出的 .mwebtheme）
+ *  目标：统一全站标题、链接、代码块配色，对齐 MWeb 预览效果
+ * ========================================================= */
+
+/* ---------- 标题：青蓝色 #0595bf ---------- */
+h1, h2, h3, h4, h5, h6 {
+  color: #0595bf !important;
+  border-bottom: none !important;
+}
+
+/* ---------- 链接：蓝 #0366dd ---------- */
+a {
+  color: #0366dd !important;
+}
+
+/* ---------- 行内代码：绿 #09844f（MWeb inlineCode 配色）---------- */
+code {
+  background-color: rgba(9, 132, 79, 0.10) !important;
+  color: #09844f !important;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+}
+
+/* ---------- 代码块基础：浅色底、圆角、深灰字 #333333 ---------- */
+pre, pre[class*="language-"], .highlight pre, .codehilite pre, figure.highlight {
+  background-color: #f7f7f7 !important;
+  border: 1px solid #e8e8e8 !important;
+  border-radius: 6px !important;
+  color: #333333 !important;
+}
+
+pre code, .highlight pre code, .codehilite pre code {
+  background-color: transparent !important;
+  color: #333333 !important;
+}
+
+/* 无语言标识的代码块（如 ASCII 流程图）：MWeb blockCode 绿 #09844f */
+pre > code:not([class]) {
+  color: #09844f !important;
+}
+
+/* ---------- Rouge token：对齐 MWeb codeblock-* 配色 ---------- */
+
+/* 注释 #8e9c92 */
+.highlight .c,
+.highlight .cm,
+.highlight .c1,
+.highlight .cp,
+.highlight .cs {
+  color: #8e9c92 !important;
+}
+
+/* 关键字 #bc319c */
+.highlight .k,
+.highlight .kc,
+.highlight .kd,
+.highlight .kn,
+.highlight .kp,
+.highlight .kr,
+.highlight .kt {
+  color: #bc319c !important;
+}
+
+/* 字符串 #d32d26 */
+.highlight .s,
+.highlight .sb,
+.highlight .sc,
+.highlight .sd,
+.highlight .s2,
+.highlight .sh,
+.highlight .si,
+.highlight .sx,
+.highlight .s1 {
+  color: #d32d26 !important;
+}
+
+/* 数字 / 字符 #2834ce */
+.highlight .m,
+.highlight .mf,
+.highlight .mh,
+.highlight .mi,
+.highlight .mo,
+.highlight .il {
+  color: #2834ce !important;
+}
+
+/* 注解 / 预处理 #784830（@Serializable, @SerialName 等） */
+.highlight .nd {
+  color: #784830 !important;
+}
+
+/* 属性 #967d41 */
+.highlight .na,
+.highlight .nt {
+  color: #967d41 !important;
+}
+
+/* 类名 / 函数名 / 命名空间：MWeb 无单独字段，沿用编辑器深灰 */
+.highlight .nc,
+.highlight .nf,
+.highlight .fm,
+.highlight .nn {
+  color: #333333 !important;
+}
+
+/* 普通变量名 / 标识符 */
+.highlight .n,
+.highlight .nl,
+.highlight .nx,
+.highlight .py,
+.highlight .nv,
+.highlight .vc,
+.highlight .vg,
+.highlight .vi {
+  color: #333333 !important;
+}
+
+/* 运算符 / 标点 */
+.highlight .o,
+.highlight .p {
+  color: #333333 !important;
+}
+
+/* 错误 / 特殊 */
+.highlight .err {
+  color: #a61717 !important;
+  background-color: #e3d2d2 !important;
+}
+.highlight .gr,
+.highlight .gt {
+  color: #aa0000 !important;
+}
+.highlight .gu {
+  color: #800080 !important;
+  font-weight: bold !important;
+}
+.highlight .gs {
+  font-weight: bold !important;
+}
+.highlight .ge {
+  font-style: italic !important;
+}
