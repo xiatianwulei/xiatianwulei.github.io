@@ -1,143 +1,280 @@
 /* =========================================================
- *  Yosemite 主题风格覆盖（配色取自 MWeb Pro 导出的 .mwebtheme）
- *  目标：统一全站标题、链接、代码块配色，对齐 MWeb 预览效果
+ *  MWeb 主题风格覆盖
+ *  亮色配色取自 000-1.mwebtheme，暗色配色取自 anzhuti.mwebtheme
+ *  默认（亮）：对齐 000-1；[data-theme="dark"]：对齐 anzhuti
  * ========================================================= */
 
-/* ---------- 标题：青蓝色 #0595bf ---------- */
-h1, h2, h3, h4, h5, h6 {
+/* =========================================================
+ *  亮色（000-1.mwebtheme）
+ * ========================================================= */
+
+/* 标题：青蓝色 #0595bf */
+html body h1,
+html body h2,
+html body h3,
+html body h4,
+html body h5,
+html body h6 {
   color: #0595bf !important;
   border-bottom: none !important;
 }
 
-/* ---------- 链接：蓝 #0366dd ---------- */
-a {
+/* 链接：蓝 #0366dd */
+html body a {
   color: #0366dd !important;
 }
 
-/* ---------- 行内代码：绿 #09844f（MWeb inlineCode 配色）---------- */
-code {
+/* 行内代码：绿 #09844f */
+html body code {
   background-color: rgba(9, 132, 79, 0.10) !important;
   color: #09844f !important;
   padding: 0.2em 0.4em;
   border-radius: 3px;
 }
 
-/* ---------- 代码块基础：浅色底、圆角、深灰字 #333333 ---------- */
-pre, pre[class*="language-"], .highlight pre, .codehilite pre, figure.highlight {
+/* 代码块基础：浅底、圆角、深灰字 #333333 */
+html body pre,
+html body pre[class*="language-"],
+html body .highlight pre,
+html body .codehilite pre,
+html body figure.highlight {
   background-color: #f7f7f7 !important;
   border: 1px solid #e8e8e8 !important;
   border-radius: 6px !important;
   color: #333333 !important;
 }
 
-pre code, .highlight pre code, .codehilite pre code {
+html body pre code,
+html body .highlight pre code,
+html body .codehilite pre code {
   background-color: transparent !important;
   color: #333333 !important;
 }
 
-/* 无语言标识的代码块（如 ASCII 流程图）：MWeb blockCode 绿 #09844f */
-pre > code:not([class]) {
+/* 无语言标识代码块（ASCII 流程图）：绿 #09844f */
+html body pre > code:not([class]) {
   color: #09844f !important;
 }
 
-/* ---------- Rouge token：对齐 MWeb codeblock-* 配色 ---------- */
-
-/* 注释 #8e9c92 */
-.highlight .c,
-.highlight .cm,
-.highlight .c1,
-.highlight .cp,
-.highlight .cs {
+/* 引用块：灰绿 #8e9c92 */
+html body blockquote {
   color: #8e9c92 !important;
+  border-left-color: #0595bf !important;
 }
 
-/* 关键字 #bc319c */
-.highlight .k,
-.highlight .kc,
-.highlight .kd,
-.highlight .kn,
-.highlight .kp,
-.highlight .kr,
-.highlight .kt {
-  color: #bc319c !important;
+/* ---------- Rouge token：亮色 ---------- */
+
+html body .highlight .c,
+html body .highlight .cm,
+html body .highlight .c1,
+html body .highlight .cp,
+html body .highlight .cs {
+  color: #8e9c92 !important;                       /* 注释 */
 }
 
-/* 字符串 #d32d26 */
-.highlight .s,
-.highlight .sb,
-.highlight .sc,
-.highlight .sd,
-.highlight .s2,
-.highlight .sh,
-.highlight .si,
-.highlight .sx,
-.highlight .s1 {
-  color: #d32d26 !important;
+html body .highlight .k,
+html body .highlight .kc,
+html body .highlight .kd,
+html body .highlight .kn,
+html body .highlight .kp,
+html body .highlight .kr,
+html body .highlight .kt {
+  color: #bc319c !important;                       /* 关键字 */
 }
 
-/* 数字 / 字符 #2834ce */
-.highlight .m,
-.highlight .mf,
-.highlight .mh,
-.highlight .mi,
-.highlight .mo,
-.highlight .il {
-  color: #2834ce !important;
+html body .highlight .s,
+html body .highlight .sb,
+html body .highlight .sc,
+html body .highlight .sd,
+html body .highlight .s2,
+html body .highlight .sh,
+html body .highlight .si,
+html body .highlight .sx,
+html body .highlight .s1 {
+  color: #d32d26 !important;                       /* 字符串 */
 }
 
-/* 注解 / 预处理 #784830（@Serializable, @SerialName 等） */
-.highlight .nd {
-  color: #784830 !important;
+html body .highlight .m,
+html body .highlight .mf,
+html body .highlight .mh,
+html body .highlight .mi,
+html body .highlight .mo,
+html body .highlight .il {
+  color: #2834ce !important;                       /* 数字/字符 */
 }
 
-/* 属性 #967d41 */
-.highlight .na,
-.highlight .nt {
-  color: #967d41 !important;
+html body .highlight .nb,
+html body .highlight .no,
+html body .highlight .bp {
+  color: #986801 !important;                       /* 内置常量/null */
 }
 
-/* 类名 / 函数名 / 命名空间：MWeb 无单独字段，沿用编辑器深灰 */
-.highlight .nc,
-.highlight .nf,
-.highlight .fm,
-.highlight .nn {
-  color: #333333 !important;
+html body .highlight .nd {
+  color: #784830 !important;                       /* 注解/预处理 */
 }
 
-/* 普通变量名 / 标识符 */
-.highlight .n,
-.highlight .nl,
-.highlight .nx,
-.highlight .py,
-.highlight .nv,
-.highlight .vc,
-.highlight .vg,
-.highlight .vi {
-  color: #333333 !important;
+html body .highlight .na,
+html body .highlight .nt {
+  color: #967d41 !important;                       /* 属性 */
 }
 
-/* 运算符 / 标点 */
-.highlight .o,
-.highlight .p {
-  color: #333333 !important;
+html body .highlight .nc,
+html body .highlight .nf,
+html body .highlight .fm,
+html body .highlight .nn {
+  color: #333333 !important;                       /* 类名/函数名 */
 }
 
-/* 错误 / 特殊 */
-.highlight .err {
+html body .highlight .n,
+html body .highlight .nl,
+html body .highlight .nx,
+html body .highlight .py,
+html body .highlight .nv,
+html body .highlight .vc,
+html body .highlight .vg,
+html body .highlight .vi {
+  color: #333333 !important;                       /* 普通变量名 */
+}
+
+html body .highlight .o,
+html body .highlight .p {
+  color: #333333 !important;                       /* 运算符/标点 */
+}
+
+html body .highlight .err {
   color: #a61717 !important;
   background-color: #e3d2d2 !important;
 }
-.highlight .gr,
-.highlight .gt {
-  color: #aa0000 !important;
+
+/* =========================================================
+ *  暗色（anzhuti.mwebtheme）—— 仅当页面 data-theme="dark" 时生效
+ * ========================================================= */
+
+/* 标题：青色 #66cccc */
+html body[data-theme="dark"] h1,
+html body[data-theme="dark"] h2,
+html body[data-theme="dark"] h3,
+html body[data-theme="dark"] h4,
+html body[data-theme="dark"] h5,
+html body[data-theme="dark"] h6 {
+  color: #66cccc !important;
 }
-.highlight .gu {
-  color: #800080 !important;
-  font-weight: bold !important;
+
+/* 链接：绿 #99cc99 */
+html body[data-theme="dark"] a {
+  color: #99cc99 !important;
 }
-.highlight .gs {
-  font-weight: bold !important;
+
+/* 行内代码：灰 #999999 */
+html body[data-theme="dark"] code {
+  background-color: rgba(153, 153, 153, 0.12) !important;
+  color: #999999 !important;
 }
-.highlight .ge {
-  font-style: italic !important;
+
+/* 代码块基础：深底 #2d2d2d，亮灰字 #cccccc */
+html body[data-theme="dark"] pre,
+html body[data-theme="dark"] pre[class*="language-"],
+html body[data-theme="dark"] .highlight pre,
+html body[data-theme="dark"] .codehilite pre,
+html body[data-theme="dark"] figure.highlight {
+  background-color: #2d2d2d !important;
+  border: 1px solid #444444 !important;
+  color: #cccccc !important;
+}
+
+html body[data-theme="dark"] pre code,
+html body[data-theme="dark"] .highlight pre code,
+html body[data-theme="dark"] .codehilite pre code {
+  background-color: transparent !important;
+  color: #cccccc !important;
+}
+
+/* 无语言代码块：灰 #999999 */
+html body[data-theme="dark"] pre > code:not([class]) {
+  color: #999999 !important;
+}
+
+/* 引用块：红 #f2777a */
+html body[data-theme="dark"] blockquote {
+  color: #f2777a !important;
+  border-left-color: #66cccc !important;
+}
+
+/* ---------- Rouge token：暗色 ---------- */
+
+html body[data-theme="dark"] .highlight .c,
+html body[data-theme="dark"] .highlight .cm,
+html body[data-theme="dark"] .highlight .c1,
+html body[data-theme="dark"] .highlight .cp,
+html body[data-theme="dark"] .highlight .cs {
+  color: #48be66 !important;                       /* 注释 */
+}
+
+html body[data-theme="dark"] .highlight .k,
+html body[data-theme="dark"] .highlight .kc,
+html body[data-theme="dark"] .highlight .kd,
+html body[data-theme="dark"] .highlight .kn,
+html body[data-theme="dark"] .highlight .kp,
+html body[data-theme="dark"] .highlight .kr,
+html body[data-theme="dark"] .highlight .kt {
+  color: #c33795 !important;                       /* 关键字 */
+}
+
+html body[data-theme="dark"] .highlight .s,
+html body[data-theme="dark"] .highlight .sb,
+html body[data-theme="dark"] .highlight .sc,
+html body[data-theme="dark"] .highlight .sd,
+html body[data-theme="dark"] .highlight .s2,
+html body[data-theme="dark"] .highlight .sh,
+html body[data-theme="dark"] .highlight .si,
+html body[data-theme="dark"] .highlight .sx,
+html body[data-theme="dark"] .highlight .s1 {
+  color: #e6424b !important;                       /* 字符串 */
+}
+
+html body[data-theme="dark"] .highlight .m,
+html body[data-theme="dark"] .highlight .mf,
+html body[data-theme="dark"] .highlight .mh,
+html body[data-theme="dark"] .highlight .mi,
+html body[data-theme="dark"] .highlight .mo,
+html body[data-theme="dark"] .highlight .il {
+  color: #8b86c9 !important;                       /* 数字/字符 */
+}
+
+html body[data-theme="dark"] .highlight .nb,
+html body[data-theme="dark"] .highlight .no,
+html body[data-theme="dark"] .highlight .bp {
+  color: #8b86c9 !important;                       /* 内置常量/null */
+}
+
+html body[data-theme="dark"] .highlight .nd {
+  color: #d38e63 !important;                       /* 注解/预处理 */
+}
+
+html body[data-theme="dark"] .highlight .na,
+html body[data-theme="dark"] .highlight .nt {
+  color: #67878e !important;                       /* 属性 */
+}
+
+html body[data-theme="dark"] .highlight .nc,
+html body[data-theme="dark"] .highlight .nf,
+html body[data-theme="dark"] .highlight .fm,
+html body[data-theme="dark"] .highlight .nn {
+  color: #cccccc !important;                       /* 类名/函数名 */
+}
+
+html body[data-theme="dark"] .highlight .n,
+html body[data-theme="dark"] .highlight .nl,
+html body[data-theme="dark"] .highlight .nx,
+html body[data-theme="dark"] .highlight .py,
+html body[data-theme="dark"] .highlight .nv,
+html body[data-theme="dark"] .highlight .vc,
+html body[data-theme="dark"] .highlight .vg,
+html body[data-theme="dark"] .highlight .vi {
+  color: #cccccc !important;                       /* 普通变量名 */
+}
+
+html body[data-theme="dark"] .highlight .o,
+html body[data-theme="dark"] .highlight .p {
+  color: #cccccc !important;                       /* 运算符/标点 */
 }
