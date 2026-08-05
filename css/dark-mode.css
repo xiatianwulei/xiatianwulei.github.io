@@ -495,12 +495,12 @@ pre:hover .code-copy-btn,
   .highlight pre,
   pre,
   .highlight .hll {
-    background-color: #0d1117;
-    border: 1px solid #30363d;
-    color: #c9d1d9;
+    background-color: #1e1e2e;
+    border: 1px solid #2d2d44;
+    color: #cccccc;
   }
   pre code {
-    color: #c9d1d9;
+    color: #cccccc;
   }
 
   /* ---- Syntax Highlighting (GitHub Dark-inspired) ---- */

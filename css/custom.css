@@ -171,20 +171,24 @@ html body[data-theme="dark"] code {
   color: #999999 !important;
 }
 
-/* 代码块基础：深底 #2d2d2d，亮灰字 #cccccc */
+/* 代码块基础：深底 #1e1e2e（与博客暗色 body 协调），亮灰字 #cccccc */
 html body[data-theme="dark"] pre,
 html body[data-theme="dark"] pre[class*="language-"],
+html body[data-theme="dark"] .highlight,
 html body[data-theme="dark"] .highlight pre,
+html body[data-theme="dark"] .codehilite,
 html body[data-theme="dark"] .codehilite pre,
-html body[data-theme="dark"] figure.highlight {
-  background-color: #2d2d2d !important;
-  border: 1px solid #444444 !important;
+html body[data-theme="dark"] figure.highlight,
+html body[data-theme="dark"] figure.highlight pre {
+  background-color: #1e1e2e !important;
+  border: 1px solid #2d2d44 !important;
   color: #cccccc !important;
 }
 
 html body[data-theme="dark"] pre code,
 html body[data-theme="dark"] .highlight pre code,
-html body[data-theme="dark"] .codehilite pre code {
+html body[data-theme="dark"] .codehilite pre code,
+html body[data-theme="dark"] figure.highlight code {
   background-color: transparent !important;
   color: #cccccc !important;
 }
